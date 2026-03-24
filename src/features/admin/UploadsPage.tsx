@@ -1,4 +1,256 @@
-const UploadsPage = (): React.JSX.Element => {
-  return <div>Uploads</div>
+import { useState, useRef, useCallback } from 'react'
+import { Button } from '@/shared/ui/button'
+import { uploadImagen, uploadMusica, deleteUpload } from '@/shared/api/endpoints'
+import { TrashIcon, UploadIcon, CopyIcon, CheckIcon } from 'lucide-react'
+
+const IMAGE_ACCEPT = '.jpeg,.jpg,.png,.gif,.webp'
+const AUDIO_ACCEPT = '.mp3,.wav,.ogg'
+
+interface UploadEntry {
+  filename: string
+  url: string
+  tipo: 'imagen' | 'musica'
 }
+
+const UploadsPage = (): React.JSX.Element => {
+  const [uploads, setUploads] = useState<UploadEntry[]>([])
+  const [imageLoading, setImageLoading] = useState(false)
+  const [audioLoading, setAudioLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [copiedUrl, setCopiedUrl] = useState('')
+
+  const imageInputRef = useRef<HTMLInputElement>(null)
+  const audioInputRef = useRef<HTMLInputElement>(null)
+
+  const handleImageUpload = useCallback(async (file: File) => {
+    setError('')
+    setImageLoading(true)
+    try {
+      const result = await uploadImagen(file)
+      setUploads((prev) => [
+        { filename: file.name, url: result.url, tipo: 'imagen' },
+        ...prev,
+      ])
+    } catch {
+      setError('Error al subir imagen')
+    } finally {
+      setImageLoading(false)
+    }
+  }, [])
+
+  const handleAudioUpload = useCallback(async (file: File) => {
+    setError('')
+    setAudioLoading(true)
+    try {
+      const result = await uploadMusica(file)
+      setUploads((prev) => [
+        { filename: file.name, url: result.url, tipo: 'musica' },
+        ...prev,
+      ])
+    } catch {
+      setError('Error al subir audio')
+    } finally {
+      setAudioLoading(false)
+    }
+  }, [])
+
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) void handleImageUpload(file)
+    e.target.value = ''
+  }
+
+  const handleAudioFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) void handleAudioUpload(file)
+    e.target.value = ''
+  }
+
+  const handleDrop = (tipo: 'imagen' | 'musica') => (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    const file = e.dataTransfer.files[0]
+    if (!file) return
+
+    if (tipo === 'imagen') {
+      const validImage = /\.(jpe?g|png|gif|webp)$/i.test(file.name)
+      if (!validImage) {
+        setError('Formato de imagen no valido. Usa jpeg, png, gif o webp.')
+        return
+      }
+      void handleImageUpload(file)
+    } else {
+      const validAudio = /\.(mp3|wav|ogg)$/i.test(file.name)
+      if (!validAudio) {
+        setError('Formato de audio no valido. Usa mp3, wav u ogg.')
+        return
+      }
+      void handleAudioUpload(file)
+    }
+  }
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+  }
+
+  const handleDelete = async (entry: UploadEntry) => {
+    try {
+      await deleteUpload(entry.url)
+      setUploads((prev) => prev.filter((u) => u.url !== entry.url))
+    } catch {
+      setError('Error al eliminar archivo')
+    }
+  }
+
+  const copyToClipboard = async (url: string) => {
+    await navigator.clipboard.writeText(url)
+    setCopiedUrl(url)
+    setTimeout(() => setCopiedUrl(''), 2000)
+  }
+
+  const imageUploads = uploads.filter((u) => u.tipo === 'imagen')
+  const audioUploads = uploads.filter((u) => u.tipo === 'musica')
+
+  return (
+    <div className="flex flex-col gap-6">
+      <h1 className="text-lg font-semibold">Uploads</h1>
+
+      {error && <p className="text-sm text-destructive">{error}</p>}
+
+      {/* Images section */}
+      <section className="flex flex-col gap-3">
+        <h2 className="text-base font-medium">Imagenes</h2>
+        <div
+          onDrop={handleDrop('imagen')}
+          onDragOver={handleDragOver}
+          className="flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-muted-foreground/25 p-6 transition-colors hover:border-muted-foreground/50"
+        >
+          <UploadIcon className="size-8 text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">
+            Arrastra una imagen aqui o
+          </p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => imageInputRef.current?.click()}
+            disabled={imageLoading}
+          >
+            {imageLoading ? 'Subiendo...' : 'Seleccionar archivo'}
+          </Button>
+          <p className="text-xs text-muted-foreground">JPEG, PNG, GIF, WebP</p>
+          <input
+            ref={imageInputRef}
+            type="file"
+            accept={IMAGE_ACCEPT}
+            className="hidden"
+            onChange={handleImageFileChange}
+          />
+        </div>
+
+        {imageUploads.length > 0 && (
+          <div className="flex flex-col gap-2">
+            {imageUploads.map((entry) => (
+              <div
+                key={entry.url}
+                className="flex items-center gap-3 rounded-lg border p-2"
+              >
+                <img
+                  src={entry.url}
+                  alt={entry.filename}
+                  className="h-10 w-10 rounded object-cover"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{entry.filename}</p>
+                  <p className="text-xs text-muted-foreground truncate">{entry.url}</p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => void copyToClipboard(entry.url)}
+                  aria-label="Copiar URL"
+                >
+                  {copiedUrl === entry.url ? <CheckIcon /> : <CopyIcon />}
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="icon-sm"
+                  onClick={() => void handleDelete(entry)}
+                  aria-label="Eliminar"
+                >
+                  <TrashIcon />
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Audio section */}
+      <section className="flex flex-col gap-3">
+        <h2 className="text-base font-medium">Musica</h2>
+        <div
+          onDrop={handleDrop('musica')}
+          onDragOver={handleDragOver}
+          className="flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-muted-foreground/25 p-6 transition-colors hover:border-muted-foreground/50"
+        >
+          <UploadIcon className="size-8 text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">
+            Arrastra un archivo de audio aqui o
+          </p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => audioInputRef.current?.click()}
+            disabled={audioLoading}
+          >
+            {audioLoading ? 'Subiendo...' : 'Seleccionar archivo'}
+          </Button>
+          <p className="text-xs text-muted-foreground">MP3, WAV, OGG</p>
+          <input
+            ref={audioInputRef}
+            type="file"
+            accept={AUDIO_ACCEPT}
+            className="hidden"
+            onChange={handleAudioFileChange}
+          />
+        </div>
+
+        {audioUploads.length > 0 && (
+          <div className="flex flex-col gap-2">
+            {audioUploads.map((entry) => (
+              <div
+                key={entry.url}
+                className="flex items-center gap-3 rounded-lg border p-2"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded bg-muted text-xs">
+                  ♪
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{entry.filename}</p>
+                  <p className="text-xs text-muted-foreground truncate">{entry.url}</p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => void copyToClipboard(entry.url)}
+                  aria-label="Copiar URL"
+                >
+                  {copiedUrl === entry.url ? <CheckIcon /> : <CopyIcon />}
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="icon-sm"
+                  onClick={() => void handleDelete(entry)}
+                  aria-label="Eliminar"
+                >
+                  <TrashIcon />
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+    </div>
+  )
+}
+
 export default UploadsPage
