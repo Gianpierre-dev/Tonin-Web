@@ -1,10 +1,12 @@
+export type EasingName = 'easeIn' | 'easeOut' | 'easeInOut' | 'linear'
+
 export interface AnimationConfig {
   duration: number
   y?: number[]
   scale?: number[]
   rotate?: number[]
   opacity?: number[]
-  ease: string
+  ease: EasingName
 }
 
 export const ANIMATION_PRESETS: Record<string, AnimationConfig> = {
