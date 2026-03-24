@@ -189,6 +189,7 @@ export const SwipeStack = ({
       {frase ? (
         <div
           {...bind()}
+          tabIndex={0}
           className="relative z-10 w-full cursor-grab active:cursor-grabbing"
           style={{ touchAction: 'pan-y' }}
         >

@@ -9,18 +9,21 @@ interface MoodGridProps {
 
 const SKELETON_COUNT = 6
 
+const prefersReducedMotion =
+  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
 const container = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.05,
+      staggerChildren: prefersReducedMotion ? 0 : 0.05,
     },
   },
 }
 
 const item = {
-  hidden: { opacity: 0, scale: 0.9 },
+  hidden: { opacity: 0, scale: prefersReducedMotion ? 1 : 0.9 },
   show: { opacity: 1, scale: 1 },
 }
 

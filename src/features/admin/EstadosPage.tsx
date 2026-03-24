@@ -22,6 +22,7 @@ import { PlusIcon, PencilIcon, TrashIcon } from 'lucide-react'
 const EstadosPage = (): React.JSX.Element => {
   const [estados, setEstados] = useState<EstadoAnimoDTO[]>([])
   const [loading, setLoading] = useState(true)
+  const [crudError, setCrudError] = useState('')
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingEstado, setEditingEstado] = useState<EstadoAnimoDTO | undefined>()
 
@@ -30,7 +31,7 @@ const EstadosPage = (): React.JSX.Element => {
       const data = await getEstados()
       setEstados(data)
     } catch {
-      // silently fail - table will be empty
+      setCrudError('No se pudieron cargar los estados. Verifica la conexión.')
     } finally {
       setLoading(false)
     }
@@ -53,14 +54,16 @@ const EstadosPage = (): React.JSX.Element => {
   const handleDelete = async (estado: EstadoAnimoDTO) => {
     if (!window.confirm(`Eliminar estado "${estado.nombre}"?`)) return
     try {
+      setCrudError('')
       await deleteEstado(estado.id)
       await fetchEstados()
     } catch {
-      // error handled by interceptor
+      setCrudError(`No se pudo eliminar el estado "${estado.nombre}".`)
     }
   }
 
   const handleSubmit = async (data: Omit<EstadoAnimoDTO, 'id'>) => {
+    setCrudError('')
     if (editingEstado) {
       await updateEstado(editingEstado.id, data)
     } else {
@@ -80,6 +83,7 @@ const EstadosPage = (): React.JSX.Element => {
 
   return (
     <div className="flex flex-col gap-4">
+      {crudError && <p className="text-sm text-destructive">{crudError}</p>}
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-semibold">Estados de Animo</h1>
         <Button onClick={handleAdd} size="sm">

@@ -51,7 +51,7 @@ export const HomeScreen = (): React.JSX.Element => {
   )
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-warm-cream px-6 py-12 dark:bg-warm-black">
+    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-warm-cream px-6 py-12 dark:bg-warm-black">
       {/* Ambient orbs */}
       <div
         aria-hidden="true"
@@ -85,6 +85,6 @@ export const HomeScreen = (): React.JSX.Element => {
         {/* Mood grid */}
         <MoodGrid onSelect={handleSelect} />
       </div>
-    </div>
+    </main>
   )
 }

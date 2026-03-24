@@ -27,6 +27,7 @@ const truncate = (text: string, length: number): string =>
 const FrasesPage = (): React.JSX.Element => {
   const [frases, setFrases] = useState<FraseDTO[]>([])
   const [loading, setLoading] = useState(true)
+  const [crudError, setCrudError] = useState('')
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingFrase, setEditingFrase] = useState<FraseDTO | undefined>()
 
@@ -35,7 +36,7 @@ const FrasesPage = (): React.JSX.Element => {
       const data = await getFrases()
       setFrases(data)
     } catch {
-      // silently fail
+      setCrudError('No se pudieron cargar las frases. Verifica la conexión.')
     } finally {
       setLoading(false)
     }
@@ -58,14 +59,16 @@ const FrasesPage = (): React.JSX.Element => {
   const handleDelete = async (frase: FraseDTO) => {
     if (!window.confirm(`Eliminar frase "${truncate(frase.texto, 40)}"?`)) return
     try {
+      setCrudError('')
       await deleteFrase(frase.id)
       await fetchFrases()
     } catch {
-      // error handled by interceptor
+      setCrudError('No se pudo eliminar la frase.')
     }
   }
 
   const handleSubmit = async (texto: string, estadoAnimoId: number) => {
+    setCrudError('')
     if (editingFrase) {
       await updateFrase(editingFrase.id, texto, estadoAnimoId)
     } else {
@@ -85,6 +88,7 @@ const FrasesPage = (): React.JSX.Element => {
 
   return (
     <div className="flex flex-col gap-4">
+      {crudError && <p className="text-sm text-destructive">{crudError}</p>}
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-semibold">Frases</h1>
         <Button onClick={handleAdd} size="sm">

@@ -27,6 +27,9 @@ export const PhraseScreen = (): React.JSX.Element => {
   const colorPrimario = estado?.colorPrimario ?? '#c4a882'
   const colorSecundario = estado?.colorSecundario ?? '#a89278'
 
+  const prefersReducedMotion =
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
   const animConfig = useMemo((): AnimationConfig => {
     const type = estado?.animationType ?? DEFAULT_ANIMATION
     const preset = ANIMATION_PRESETS[type] ?? ANIMATION_PRESETS[DEFAULT_ANIMATION]
@@ -79,6 +82,13 @@ export const PhraseScreen = (): React.JSX.Element => {
 
   // Build animation props for breathing glows
   const buildBreathingAnimation = () => {
+    if (prefersReducedMotion) {
+      return {
+        animate: { opacity: 1 },
+        transition: { duration: 0 },
+      }
+    }
+
     const animateProps: Record<string, number[]> = {}
     if (animConfig.opacity) animateProps.opacity = animConfig.opacity
     if (animConfig.scale) animateProps.scale = animConfig.scale
@@ -105,12 +115,12 @@ export const PhraseScreen = (): React.JSX.Element => {
 
   return (
     <AnimatePresence>
-      <motion.div
+      <motion.main
         className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden"
-        initial={{ opacity: 0, scale: 0.98 }}
+        initial={{ opacity: 0, scale: prefersReducedMotion ? 1 : 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.98 }}
-        transition={{ duration: 0.5 }}
+        exit={{ opacity: 0, scale: prefersReducedMotion ? 1 : 0.98 }}
+        transition={{ duration: prefersReducedMotion ? 0.3 : 0.5 }}
       >
         {/* Background glows */}
         <div className="pointer-events-none absolute inset-0" aria-hidden="true">
@@ -214,6 +224,7 @@ export const PhraseScreen = (): React.JSX.Element => {
         <motion.button
           type="button"
           onClick={handleBack}
+          aria-label="Volver a selección de estado de ánimo"
           className="absolute bottom-8 z-20 rounded-full px-5 py-2 text-sm transition-colors"
           style={{
             color: colorPrimario,
@@ -222,8 +233,8 @@ export const PhraseScreen = (): React.JSX.Element => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={prefersReducedMotion ? undefined : { scale: 1.05 }}
+          whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
         >
           ↩ cambiar
         </motion.button>
@@ -235,7 +246,7 @@ export const PhraseScreen = (): React.JSX.Element => {
             100% { height: 100%; }
           }
         `}</style>
-      </motion.div>
+      </motion.main>
     </AnimatePresence>
   )
 }

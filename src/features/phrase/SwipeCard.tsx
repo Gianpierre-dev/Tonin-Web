@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import type { FraseDTO } from '@/lib/schemas'
 
 interface SwipeCardProps {
@@ -15,6 +15,7 @@ export const SwipeCard = ({
   const colorPrimario = frase.estadoAnimo.colorPrimario ?? '#c4a882'
   const emoji = frase.estadoAnimo.emoji
   const iconUrl = frase.estadoAnimo.iconUrl
+  const [imgError, setImgError] = useState(false)
 
   return (
     <div
@@ -53,11 +54,12 @@ export const SwipeCard = ({
 
       {/* Emoji / Icon */}
       <div className="mb-6 mt-4 flex justify-center text-5xl">
-        {iconUrl ? (
+        {iconUrl && !imgError ? (
           <img
             src={iconUrl}
             alt={frase.estadoAnimo.nombre}
             className="h-12 w-12 object-contain"
+            onError={() => setImgError(true)}
           />
         ) : (
           <span>{emoji}</span>
@@ -66,6 +68,7 @@ export const SwipeCard = ({
 
       {/* Phrase text */}
       <p
+        aria-live="polite"
         className="text-center text-xl leading-relaxed text-text-dark dark:text-text-dark"
         style={{
           fontFamily: 'var(--mood-font)',
