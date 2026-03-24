@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  --color-warm-black: #0a0a0f;
+  --color-warm-dark: #0f1520;
+  --color-warm-cream: #fdf6ee;
+  --color-warm-beige: #f8f0e6;
+  --color-text-dark: #e8e4df;
+  --color-text-light: #2a2520;
+  --color-accent: #c4a882;
+}
+
+:root {
+  --mood-primary: #c4a882;
+  --mood-secondary: #a89278;
+  --mood-font: 'Outfit', system-ui, sans-serif;
+}
