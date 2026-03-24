@@ -1,0 +1,77 @@
+<h2>¿Cómo es el flujo de la página principal?</h2>
+<p class="subtitle">El usuario llega a la app y quiere una frase motivacional. ¿Cómo se siente el recorrido?</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 24px; color: white; min-height: 280px;">
+      <div style="text-align:center; margin-bottom: 16px;">
+        <div style="font-size: 14px; opacity: 0.6; letter-spacing: 2px;">¿CÓMO TE SIENTES HOY?</div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
+        <div style="background: rgba(255,107,107,0.2); border: 1px solid rgba(255,107,107,0.4); border-radius: 16px; padding: 16px; text-align: center;">
+          <div style="font-size: 28px;">😊</div>
+          <div style="font-size: 11px; margin-top: 4px; opacity: 0.8;">Feliz</div>
+        </div>
+        <div style="background: rgba(100,149,237,0.2); border: 1px solid rgba(100,149,237,0.4); border-radius: 16px; padding: 16px; text-align: center;">
+          <div style="font-size: 28px;">😢</div>
+          <div style="font-size: 11px; margin-top: 4px; opacity: 0.8;">Triste</div>
+        </div>
+        <div style="background: rgba(255,165,0,0.2); border: 1px solid rgba(255,165,0,0.4); border-radius: 16px; padding: 16px; text-align: center;">
+          <div style="font-size: 28px;">💪</div>
+          <div style="font-size: 11px; margin-top: 4px; opacity: 0.8;">Motivado</div>
+        </div>
+      </div>
+      <div style="text-align: center; font-size: 11px; opacity: 0.4;">↓ toca uno → frase aparece</div>
+    </div>
+    <div class="card-body">
+      <h3>A — Una sola pantalla</h3>
+      <p>Grid de estados arriba, la frase aparece abajo con animación al seleccionar. Todo en una vista. Minimalista y directo.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: linear-gradient(135deg, #0f0f23, #1a0a2e); padding: 24px; color: white; min-height: 280px;">
+      <div style="text-align:center; margin-bottom: 20px;">
+        <div style="font-size: 14px; opacity: 0.6; letter-spacing: 2px;">PASO 1 DE 2</div>
+        <div style="font-size: 20px; margin-top: 8px;">¿Cómo te sientes?</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="background: rgba(255,107,107,0.15); border: 1px solid rgba(255,107,107,0.3); border-radius: 12px; padding: 14px; display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 24px;">😊</span>
+          <span style="font-size: 14px;">Feliz</span>
+        </div>
+        <div style="background: rgba(100,149,237,0.15); border: 1px solid rgba(100,149,237,0.3); border-radius: 12px; padding: 14px; display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 24px;">😢</span>
+          <span style="font-size: 14px;">Triste</span>
+        </div>
+        <div style="background: rgba(255,165,0,0.15); border: 1px solid rgba(255,165,0,0.3); border-radius: 12px; padding: 14px; display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 24px;">💪</span>
+          <span style="font-size: 14px;">Motivado</span>
+        </div>
+      </div>
+      <div style="text-align: center; font-size: 11px; opacity: 0.4; margin-top: 12px;">↓ toca uno → transición full-screen a la frase</div>
+    </div>
+    <div class="card-body">
+      <h3>B — Dos pantallas con transición</h3>
+      <p>Pantalla 1: elige estado de ánimo (lista vertical). Pantalla 2: transición inmersiva full-screen con la frase, imagen de fondo, música y colores del estado. Más cinematográfico.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: linear-gradient(135deg, #0a0a1a, #1a1a3e); padding: 24px; color: white; min-height: 280px;">
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+        <div style="font-size: 48px; margin-bottom: 12px;">😊</div>
+        <div style="font-size: 22px; font-style: italic; text-align: center; line-height: 1.6; max-width: 240px; opacity: 0.9;">"La felicidad no es una estación a la que llegas, sino una manera de viajar"</div>
+        <div style="margin-top: 20px; display: flex; gap: 24px; opacity: 0.5;">
+          <div style="font-size: 10px;">← TRISTE</div>
+          <div style="font-size: 10px;">⟷ SWIPE</div>
+          <div style="font-size: 10px;">MOTIVADO →</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Swipe entre estados</h3>
+      <p>Empiezas en un estado, swipe horizontal cambia al siguiente con transición. Cada estado es full-screen con su frase, música e imagen. Como stories pero de ánimos. Muy mobile.</p>
+    </div>
+  </div>
+</div>

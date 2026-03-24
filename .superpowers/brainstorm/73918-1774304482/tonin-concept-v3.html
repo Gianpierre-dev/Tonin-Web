@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tonin — Concepto v3: Swipe + Light/Dark</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: #08080d;
+    color: #e8e4df;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 300; }
+
+  /* ===== HEADER ===== */
+  .concept-header {
+    text-align: center;
+    padding: 50px 20px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .concept-header h1 {
+    font-size: 44px;
+    font-weight: 300;
+    letter-spacing: 8px;
+    margin-bottom: 10px;
+  }
+
+  .concept-header p {
+    font-size: 13px;
+    opacity: 0.4;
+    font-weight: 200;
+    line-height: 1.8;
+  }
+
+  .divider {
+    width: 40px;
+    height: 1px;
+    background: rgba(196, 168, 130, 0.3);
+    margin: 14px auto;
+  }
+
+  .label-sm {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.35;
+    font-weight: 300;
+    margin-bottom: 6px;
+  }
+
+  /* ===== SECTIONS ===== */
+  .concept-section {
+    padding: 36px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 300;
+    margin-bottom: 5px;
+    color: #c4a882;
+  }
+
+  .section-subtitle {
+    font-size: 12px;
+    opacity: 0.4;
+    margin-bottom: 32px;
+    font-weight: 200;
+  }
+
+  /* ===== PHONE ===== */
+  .phone-frame {
+    width: 300px;
+    min-height: 600px;
+    border-radius: 36px;
+    border: 2px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+  }
+
+  .phone-notch {
+    width: 110px;
+    height: 26px;
+    background: inherit;
+    border-radius: 0 0 18px 18px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .phone-content {
+    padding: 0 22px 28px;
+    height: calc(100% - 26px);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .phones-row {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+
+  .phone-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .phone-label {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 10px;
+    opacity: 0.25;
+    letter-spacing: 2px;
+    font-weight: 200;
+    max-width: 300px;
+  }
+
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    opacity: 0.1;
+    padding-top: 30px;
+  }
+
+  /* ===== AMBIENT ===== */
+  .ambient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    animation: drift 20s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes drift {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(8px, -12px); }
+    50% { transform: translate(-5px, 8px); }
+    75% { transform: translate(10px, 5px); }
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.15); opacity: 1; }
+  }
+
+  @keyframes breathe-centered {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.6; }
+    50% { transform: translateX(-50%) scale(1.12); opacity: 1; }
+  }
+
+  @keyframes gentle-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  @keyframes wave {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.3); }
+  }
+
+  /* ===== DARK HOME ===== */
+  .screen-home-dark {
+    background: linear-gradient(170deg, #0f1520 0%, #0a0a12 60%, #0d0a14 100%);
+  }
+  .screen-home-dark .phone-notch { background: #0f1520; }
+
+  .screen-home-dark .phone-content {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .home-top-bar {
+    position: absolute;
+    top: 36px;
+    left: 22px;
+    right: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 5;
+  }
+
+  .theme-toggle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.03);
+    transition: all 0.3s ease;
+  }
+
+  .theme-toggle:hover {
+    border-color: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.06);
+  }
+
+  .home-greeting {
+    font-size: 13px;
+    font-weight: 200;
+    opacity: 0.4;
+    margin-bottom: 4px;
+    z-index: 2;
+    position: relative;
+  }
+
+  .home-question {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1.4;
+    z-index: 2;
+    position: relative;
+    margin-bottom: 32px;
+  }
+
+  .mood-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    width: 100%;
+    z-index: 2;
+    position: relative;
+  }
+
+  .mood-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 14px 6px;
+    border-radius: 18px;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    border: 1px solid rgba(255,255,255,0.03);
+  }
+
+  .mood-cell:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.08);
+    transform: scale(1.05);
+  }
+
+  .mood-cell .emoji { font-size: 30px; line-height: 1; }
+  .mood-cell .name { font-size: 11px; font-weight: 300; opacity: 0.55; }
+
+  /* ===== LIGHT HOME ===== */
+  .screen-home-light {
+    background: linear-gradient(170deg, #fdf6ee 0%, #f8f0e6 60%, #f5ede3 100%);
+  }
+  .screen-home-light .phone-notch { background: #fdf6ee; }
+
+  .screen-home-light .phone-content {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #2a2520;
+  }
+
+  .screen-home-light .home-greeting {
+    color: #8a7e72;
+  }
+
+  .screen-home-light .home-question {
+    color: #2a2520;
+  }
+
+  .screen-home-light .mood-cell {
+    border-color: rgba(0,0,0,0.04);
+  }
+
+  .screen-home-light .mood-cell:hover {
+    background: rgba(0,0,0,0.03);
+    border-color: rgba(0,0,0,0.08);
+  }
+
+  .screen-home-light .mood-cell .name {
+    color: #5a5048;
+    opacity: 0.7;
+  }
+
+  .screen-home-light .theme-toggle {
+    border-color: rgba(0,0,0,0.08);
+    background: rgba(0,0,0,0.03);
+    color: #8a7e72;
+  }
+
+  .screen-home-light .ambient-orb.orb-warm {
+    width: 160px; height: 160px;
+    background: rgba(255, 200, 120, 0.08);
+    top: 15%; left: 5%;
+    filter: blur(50px);
+  }
+
+  .screen-home-light .ambient-orb.orb-rose {
+    width: 130px; height: 130px;
+    background: rgba(220, 170, 160, 0.06);
+    bottom: 20%; right: 0%;
+    filter: blur(50px);
+    animation-delay: -10s;
+  }
+
+  /* ===== DARK FELIZ SWIPE ===== */
+  .screen-swipe-dark {
+    background: linear-gradient(170deg, #1a1208 0%, #14100a 40%, #0a0d08 100%);
+    overflow: hidden;
+  }
+  .screen-swipe-dark .phone-notch { background: #1a1208; }
+
+  .screen-swipe-dark .glow-1 {
+    position: absolute;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 183, 77, 0.1) 0%, transparent 70%);
+    top: -10px; left: -30px;
+    animation: breathe 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .screen-swipe-dark .glow-2 {
+    position: absolute;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(129, 199, 132, 0.05) 0%, transparent 70%);
+    bottom: 80px; right: -40px;
+    animation: breathe 10s ease-in-out infinite reverse;
+    pointer-events: none;
+  }
+
+  .screen-swipe-dark .phone-content {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 2;
+  }
+
+  .audio-indicator {
+    position: absolute;
+    top: 38px;
+    right: 22px;
+    display: flex;
+    gap: 3px;
+    align-items: flex-end;
+    height: 16px;
+    opacity: 0.2;
+    z-index: 5;
+  }
+
+  .audio-indicator .bar {
+    width: 2px;
+    border-radius: 2px;
+    animation: wave 1.4s ease-in-out infinite;
+  }
+
+  .bar-amber { background: rgba(255, 183, 77, 0.7); }
+  .bar-blue { background: rgba(100, 149, 237, 0.5); }
+  .bar-rose { background: rgba(244, 162, 142, 0.6); }
+
+  .bar:nth-child(1) { height: 5px; animation-delay: 0s; }
+  .bar:nth-child(2) { height: 11px; animation-delay: 0.15s; }
+  .bar:nth-child(3) { height: 7px; animation-delay: 0.3s; }
+  .bar:nth-child(4) { height: 13px; animation-delay: 0.45s; }
+  .bar:nth-child(5) { height: 4px; animation-delay: 0.6s; }
+
+  /* Swipe card stack */
+  .swipe-stack {
+    position: relative;
+    width: 260px;
+    min-height: 320px;
+    margin: 0 auto;
+  }
+
+  .swipe-card {
+    position: absolute;
+    width: 100%;
+    border-radius: 24px;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .swipe-card.active {
+    position: relative;
+    z-index: 3;
+  }
+
+  .swipe-card.behind-1 {
+    top: 8px;
+    z-index: 2;
+    transform: scale(0.95);
+    opacity: 0.4;
+  }
+
+  .swipe-card.behind-2 {
+    top: 16px;
+    z-index: 1;
+    transform: scale(0.9);
+    opacity: 0.2;
+  }
+
+  /* Dark feliz card */
+  .card-dark-feliz {
+    background: rgba(255, 183, 77, 0.04);
+    border: 1px solid rgba(255, 183, 77, 0.08);
+  }
+
+  .card-dark-feliz .card-emoji {
+    font-size: 40px;
+    margin-bottom: 20px;
+    animation: gentle-float 5s ease-in-out infinite;
+  }
+
+  .card-dark-feliz .card-phrase {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.7;
+    color: #f5e6d3;
+  }
+
+  /* Swipe hint */
+  .swipe-hints {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 260px;
+    margin: 20px auto 0;
+    z-index: 2;
+    position: relative;
+  }
+
+  .swipe-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    opacity: 0.2;
+    font-weight: 200;
+  }
+
+  .swipe-hint .hint-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+  }
+
+  .back-btn {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    opacity: 0.25;
+    font-weight: 200;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .back-btn:hover { opacity: 0.5; }
+
+  .mood-label-bottom {
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0.15;
+    margin-top: 16px;
+    z-index: 2;
+    position: relative;
+  }
+
+  /* Swipe animation demo - card tilting right */
+  .swipe-card.swiping-right {
+    transform: translateX(30px) rotate(5deg);
+    opacity: 0.8;
+  }
+
+  .swipe-card.swiping-right .like-badge {
+    opacity: 1;
+  }
+
+  .like-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(255, 183, 77, 0.7);
+    border: 1px solid rgba(255, 183, 77, 0.3);
+    padding: 3px 10px;
+    border-radius: 6px;
+    transform: rotate(-12deg);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-weight: 400;
+  }
+
+  .next-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255, 0.4);
+    border: 1px solid rgba(255,255,255, 0.15);
+    padding: 3px 10px;
+    border-radius: 6px;
+    transform: rotate(12deg);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-weight: 400;
+  }
+
+  .swipe-card.swiping-left {
+    transform: translateX(-30px) rotate(-5deg);
+    opacity: 0.8;
+  }
+
+  .swipe-card.swiping-left .next-badge {
+    opacity: 1;
+  }
+
+  /* ===== LIGHT FELIZ SWIPE ===== */
+  .screen-swipe-light {
+    background: linear-gradient(170deg, #fdf3e4 0%, #faf0dc 40%, #f8eed6 100%);
+    overflow: hidden;
+  }
+  .screen-swipe-light .phone-notch { background: #fdf3e4; }
+
+  .screen-swipe-light .glow-1 {
+    position: absolute;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 183, 77, 0.12) 0%, transparent 70%);
+    top: -10px; left: -30px;
+    animation: breathe 8s ease-in-out infinite;
+    pointer-events: none;
+    filter: blur(30px);
+  }
+
+  .screen-swipe-light .glow-2 {
+    position: absolute;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(180, 220, 140, 0.1) 0%, transparent 70%);
+    bottom: 80px; right: -40px;
+    animation: breathe 10s ease-in-out infinite reverse;
+    pointer-events: none;
+    filter: blur(30px);
+  }
+
+  .screen-swipe-light .phone-content {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 2;
+  }
+
+  .card-light-feliz {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(200, 170, 120, 0.15);
+    backdrop-filter: blur(10px);
+  }
+
+  .card-light-feliz .card-emoji {
+    font-size: 40px;
+    margin-bottom: 20px;
+    animation: gentle-float 5s ease-in-out infinite;
+  }
+
+  .card-light-feliz .card-phrase {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.7;
+    color: #3a2e1e;
+  }
+
+  .card-light-feliz .like-badge {
+    color: rgba(180, 120, 40, 0.7);
+    border-color: rgba(180, 120, 40, 0.3);
+  }
+
+  .card-light-feliz .next-badge {
+    color: rgba(0,0,0, 0.3);
+    border-color: rgba(0,0,0, 0.12);
+  }
+
+  .screen-swipe-light .swipe-hint {
+    color: #5a4e3e;
+  }
+
+  .screen-swipe-light .swipe-hint .hint-icon {
+    border-color: rgba(0,0,0,0.08);
+  }
+
+  .screen-swipe-light .back-btn {
+    color: #5a4e3e;
+  }
+
+  .screen-swipe-light .mood-label-bottom {
+    color: #8a7e6e;
+  }
+
+  .screen-swipe-light .audio-indicator .bar {
+    background: rgba(180, 120, 40, 0.4);
+  }
+
+  /* Behind cards light */
+  .card-light-behind {
+    background: rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(200, 170, 120, 0.08);
+  }
+
+  /* ===== DARK TRISTE SWIPE ===== */
+  .screen-swipe-dark-triste {
+    background: linear-gradient(170deg, #0a0f1a 0%, #0d0a18 40%, #08080f 100%);
+    overflow: hidden;
+  }
+  .screen-swipe-dark-triste .phone-notch { background: #0a0f1a; }
+
+  .screen-swipe-dark-triste .glow-1 {
+    position: absolute;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(100, 149, 237, 0.06) 0%, transparent 70%);
+    top: 20%; left: 50%; transform: translateX(-50%);
+    animation: breathe-centered 10s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .screen-swipe-dark-triste .glow-2 {
+    position: absolute;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(252, 211, 77, 0.03) 0%, transparent 70%);
+    bottom: 25%; left: 15%;
+    animation: breathe 12s ease-in-out infinite reverse;
+    pointer-events: none;
+  }
+
+  .screen-swipe-dark-triste .phone-content {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 2;
+  }
+
+  .card-dark-triste {
+    background: rgba(100, 149, 237, 0.04);
+    border: 1px solid rgba(100, 149, 237, 0.08);
+  }
+
+  .card-dark-triste .card-emoji {
+    font-size: 38px;
+    margin-bottom: 20px;
+    animation: gentle-float 7s ease-in-out infinite;
+  }
+
+  .card-dark-triste .card-phrase {
+    font-family: 'Fraunces', serif;
+    font-size: 19px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.8;
+    color: #c8d4e8;
+  }
+
+  .card-dark-triste .like-badge {
+    color: rgba(100, 149, 237, 0.6);
+    border-color: rgba(100, 149, 237, 0.25);
+  }
+
+  .screen-swipe-dark-triste .audio-indicator .bar {
+    animation-duration: 2.2s;
+  }
+
+  /* ===== INFO GRID ===== */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+  }
+
+  .info-card {
+    padding: 20px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.04);
+    background: rgba(255,255,255,0.015);
+  }
+
+  .info-card h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: #c4a882;
+    margin-bottom: 6px;
+  }
+
+  .info-card p {
+    font-size: 12px;
+    line-height: 1.7;
+    opacity: 0.5;
+    font-weight: 200;
+  }
+
+  .info-card .tag {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    opacity: 0.25;
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+
+  /* ===== COMPARISON ===== */
+  .comparison-label {
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.2;
+    margin-top: 32px;
+    margin-bottom: 16px;
+  }
+
+  /* ===== DO/DONT ===== */
+  .swipe-behavior {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 20px;
+  }
+
+  .behavior-card {
+    padding: 20px;
+    border-radius: 14px;
+    text-align: center;
+  }
+
+  .behavior-card.right {
+    border: 1px solid rgba(255, 183, 77, 0.15);
+    background: rgba(255, 183, 77, 0.03);
+  }
+
+  .behavior-card.left {
+    border: 1px solid rgba(255,255,255, 0.08);
+    background: rgba(255,255,255, 0.02);
+  }
+
+  .behavior-card .b-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .behavior-card h4 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  .behavior-card.right h4 { color: #ffb74d; }
+  .behavior-card.left h4 { color: rgba(255,255,255,0.5); }
+
+  .behavior-card p {
+    font-size: 11px;
+    opacity: 0.45;
+    font-weight: 200;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="concept-header">
+  <div class="label-sm">Concepto v3 — swipe + light/dark</div>
+  <h1>TONIN</h1>
+  <div class="divider"></div>
+  <p>Swipe para sentir. Derecha = guardar. Izquierda = siguiente.</p>
+</div>
+
+<!-- ===== SECTION 1: HOME DARK vs LIGHT ===== -->
+<div class="concept-section">
+  <div class="section-title">Home: modo oscuro y claro</div>
+  <div class="section-subtitle">Automático por sistema + toggle manual. El toggle (☽/☀) vive discreto arriba a la derecha.</div>
+
+  <div class="phones-row">
+    <!-- DARK HOME -->
+    <div class="phone-wrapper">
+      <div class="phone-frame screen-home-dark">
+        <div class="phone-notch"></div>
+        <div class="ambient-orb orb-1" style="width:150px;height:150px;background:rgba(196,168,130,0.04);top:20%;left:10%;"></div>
+        <div class="ambient-orb orb-2" style="width:120px;height:120px;background:rgba(147,130,196,0.03);bottom:25%;right:5%;animation-delay:-8s;"></div>
+        <div class="phone-content">
+          <div class="home-top-bar">
+            <div></div>
+            <div class="theme-toggle">☽</div>
+          </div>
+          <div class="home-greeting">Buenas noches</div>
+          <div class="home-question">¿Cómo te sientes<br>en este momento?</div>
+          <div class="mood-grid">
+            <div class="mood-cell"><div class="emoji">😢</div><div class="name">Triste</div></div>
+            <div class="mood-cell"><div class="emoji">😰</div><div class="name">Ansioso</div></div>
+            <div class="mood-cell"><div class="emoji">😊</div><div class="name">Feliz</div></div>
+            <div class="mood-cell"><div class="emoji">💪</div><div class="name">Motivado</div></div>
+            <div class="mood-cell"><div class="emoji">😌</div><div class="name">Tranquilo</div></div>
+            <div class="mood-cell"><div class="emoji">🤗</div><div class="name">Agradecido</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">DARK MODE</div>
+    </div>
+
+    <!-- LIGHT HOME -->
+    <div class="phone-wrapper">
+      <div class="phone-frame screen-home-light">
+        <div class="phone-notch"></div>
+        <div class="ambient-orb orb-warm"></div>
+        <div class="ambient-orb orb-rose"></div>
+        <div class="phone-content">
+          <div class="home-top-bar">
+            <div></div>
+            <div class="theme-toggle">☀</div>
+          </div>
+          <div class="home-greeting">Buenos días</div>
+          <div class="home-question">¿Cómo te sientes<br>en este momento?</div>
+          <div class="mood-grid">
+            <div class="mood-cell"><div class="emoji">😢</div><div class="name">Triste</div></div>
+            <div class="mood-cell"><div class="emoji">😰</div><div class="name">Ansioso</div></div>
+            <div class="mood-cell"><div class="emoji">😊</div><div class="name">Feliz</div></div>
+            <div class="mood-cell"><div class="emoji">💪</div><div class="name">Motivado</div></div>
+            <div class="mood-cell"><div class="emoji">😌</div><div class="name">Tranquilo</div></div>
+            <div class="mood-cell"><div class="emoji">🤗</div><div class="name">Agradecido</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">LIGHT MODE</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 2: SWIPE MECHANIC ===== -->
+<div class="concept-section">
+  <div class="section-title">Swipe: la mecánica core</div>
+  <div class="section-subtitle">Las frases son cards apiladas. Desliza como Tinder. Derecha = ♡ guardar. Izquierda = siguiente.</div>
+
+  <div class="swipe-behavior">
+    <div class="behavior-card right">
+      <div class="b-icon">→</div>
+      <h4>SWIPE DERECHA</h4>
+      <p>Guarda la frase en favoritos (localStorage). La card sale con rotación + fade. Badge "♡ GUARDADA" aparece. La siguiente frase entra desde abajo.</p>
+    </div>
+    <div class="behavior-card left">
+      <div class="b-icon">←</div>
+      <h4>SWIPE IZQUIERDA</h4>
+      <p>Descarta y pide otra frase. La card sale con rotación opuesta. Badge "SIGUIENTE" aparece. ID se agrega a excluidos. Nueva frase entra desde abajo.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 3: FELIZ DARK vs LIGHT ===== -->
+<div class="concept-section">
+  <div class="section-title">Estado Feliz — swipe en acción</div>
+  <div class="section-subtitle">Cards apiladas con efecto de profundidad. La de adelante se puede deslizar. Las de atrás se asoman.</div>
+
+  <div class="phones-row">
+    <!-- DARK FELIZ - Active -->
+    <div class="phone-wrapper">
+      <div class="phone-frame screen-swipe-dark">
+        <div class="phone-notch"></div>
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+        <div class="audio-indicator">
+          <div class="bar bar-amber"></div><div class="bar bar-amber"></div><div class="bar bar-amber"></div><div class="bar bar-amber"></div><div class="bar bar-amber"></div>
+        </div>
+        <div class="phone-content">
+          <div class="swipe-stack">
+            <div class="swipe-card behind-2 card-dark-feliz" style="opacity:0.15;">
+              <div class="card-emoji">😊</div>
+              <div class="card-phrase" style="filter:blur(2px);">Otra frase esperando...</div>
+            </div>
+            <div class="swipe-card behind-1 card-dark-feliz" style="opacity:0.3;">
+              <div class="card-emoji">😊</div>
+              <div class="card-phrase" style="filter:blur(1px);">Siguiente frase...</div>
+            </div>
+            <div class="swipe-card active card-dark-feliz">
+              <div class="like-badge">♡ GUARDADA</div>
+              <div class="next-badge">SIGUIENTE →</div>
+              <div class="card-emoji">😊</div>
+              <div class="card-phrase">La felicidad no es una estación a la que llegas, sino una manera de viajar</div>
+            </div>
+          </div>
+          <div class="mood-label-bottom">feliz</div>
+          <div class="swipe-hints">
+            <div class="swipe-hint"><div class="hint-icon">←</div> siguiente</div>
+            <div class="swipe-hint">guardar <div class="hint-icon">→</div></div>
+          </div>
+          <div class="back-btn">↩ cambiar</div>
+        </div>
+      </div>
+      <div class="phone-label">FELIZ DARK — en reposo</div>
+    </div>
+
+    <!-- DARK FELIZ - Swiping right -->
+    <div class="phone-wrapper">
+      <div class="phone-frame screen-swipe-dark">
+        <div class="phone-notch"></div>
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+        <div class="audio-indicator">
+          <div class="bar bar-amber"></div><div class="bar bar-amber"></div><div class="bar bar-amber"></div><div class="bar bar-amber"></div><div class="bar bar-amber"></div>
+        </div>
+        <div class="phone-content">
+          <div class="swipe-stack">
+            <div class="swipe-card behind-1 card-dark-feliz" style="opacity:0.3;">
+              <div class="card-emoji">😊</div>
+              <div class="card-phrase" style="filter:blur(1px);">Siguiente frase...</div>
+            </div>
+            <div class="swipe-card active swiping-right card-dark-feliz">
+              <div class="like-badge">♡ GUARDADA</div>
+              <div class="card-emoji">😊</div>
+              <div class="card-phrase">La felicidad no es una estación a la que llegas, sino una manera de viajar</div>
+            </div>
+          </div>
+          <div class="mood-label-bottom">feliz</div>
+          <div class="swipe-hints">
+            <div class="swipe-hint"><div class="hint-icon">←</div> siguiente</div>
+            <div class="swipe-hint">guardar <div class="hint-icon">→</div></div>
+          </div>
+          <div class="back-btn">↩ cambiar</div>
+        </div>
+      </div>
+      <div class="phone-label">SWIPE DERECHA → guardar ♡</div>
+    </div>
+
+    <!-- LIGHT FELIZ -->
+    <div class="phone-wrapper">
+      <div class="phone-frame screen-swipe-light">
+        <div class="phone-notch"></div>
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+        <div class="audio-indicator">
+          <div class="bar bar-rose"></div><div class="bar bar-rose"></div><div class="bar bar-rose"></div><div class="bar bar-rose"></div><div class="bar bar-rose"></div>
+        </div>
+        <div class="phone-content">
+          <div class="swipe-stack">
+            <div class="swipe-card behind-2 card-light-behind" style="opacity:0.15;">
+              <div class="card-emoji" style="font-size:38px;">😊</div>
+            </div>
+            <div class="swipe-card behind-1 card-light-behind" style="opacity:0.3;">
+              <div class="card-emoji" style="font-size:38px;">😊</div>
+            </div>
+            <div class="swipe-card active card-light-feliz">
+              <div class="like-badge">♡ GUARDADA</div>
+              <div class="next-badge">SIGUIENTE →</div>
+              <div class="card-emoji">😊</div>
+              <div class="card-phrase">La felicidad no es una estación a la que llegas, sino una manera de viajar</div>
+            </div>
+          </div>
+          <div class="mood-label-bottom" style="color:#8a7e6e;">feliz</div>
+          <div class="swipe-hints">
+            <div class="swipe-hint"><div class="hint-icon">←</div> siguiente</div>
+            <div class="swipe-hint">guardar <div class="hint-icon">→</div></div>
+          </div>
+          <div class="back-btn" style="color:#5a4e3e;">↩ cambiar</div>
+        </div>
+      </div>
+      <div class="phone-label">FELIZ LIGHT — card glassmorphism</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 4: TRISTE DARK ===== -->
+<div class="concept-section">
+  <div class="section-title">Estado Triste — otro mundo</div>
+  <div class="section-subtitle">Misma mecánica de swipe, pero todo cambia: colores, tipografía, velocidad de animación</div>
+
+  <div class="phones-row">
+    <div class="phone-wrapper">
+      <div class="phone-frame screen-swipe-dark-triste">
+        <div class="phone-notch"></div>
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+        <div class="audio-indicator">
+          <div class="bar bar-blue"></div><div class="bar bar-blue"></div><div class="bar bar-blue"></div><div class="bar bar-blue"></div><div class="bar bar-blue"></div>
+        </div>
+        <div class="phone-content">
+          <div class="swipe-stack">
+            <div class="swipe-card behind-2 card-dark-triste" style="opacity:0.15;">
+              <div class="card-emoji" style="font-size:36px;">😢</div>
+            </div>
+            <div class="swipe-card behind-1 card-dark-triste" style="opacity:0.3;">
+              <div class="card-emoji" style="font-size:36px;">😢</div>
+            </div>
+            <div class="swipe-card active card-dark-triste">
+              <div class="like-badge" style="color:rgba(100,149,237,0.6);border-color:rgba(100,149,237,0.25);">♡ GUARDADA</div>
+              <div class="next-badge">SIGUIENTE →</div>
+              <div class="card-emoji">😢</div>
+              <div class="card-phrase">Está bien no estar bien. Este momento es difícil, y aun así estás aquí</div>
+            </div>
+          </div>
+          <div class="mood-label-bottom">triste</div>
+          <div class="swipe-hints">
+            <div class="swipe-hint"><div class="hint-icon">←</div> siguiente</div>
+            <div class="swipe-hint">guardar <div class="hint-icon">→</div></div>
+          </div>
+          <div class="back-btn">↩ cambiar</div>
+        </div>
+      </div>
+      <div class="phone-label">TRISTE DARK — Fraunces, azul noche, ritmo lento, dorado sutil de esperanza</div>
+    </div>
+
+    <!-- Swiping left -->
+    <div class="phone-wrapper">
+      <div class="phone-frame screen-swipe-dark-triste">
+        <div class="phone-notch"></div>
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+        <div class="audio-indicator">
+          <div class="bar bar-blue"></div><div class="bar bar-blue"></div><div class="bar bar-blue"></div><div class="bar bar-blue"></div><div class="bar bar-blue"></div>
+        </div>
+        <div class="phone-content">
+          <div class="swipe-stack">
+            <div class="swipe-card behind-1 card-dark-triste" style="opacity:0.3;">
+              <div class="card-emoji" style="font-size:36px;">😢</div>
+              <div class="card-phrase" style="filter:blur(1px);font-family:'Fraunces',serif;font-size:18px;color:#c8d4e8;">Siguiente frase...</div>
+            </div>
+            <div class="swipe-card active swiping-left card-dark-triste">
+              <div class="next-badge" style="opacity:1;">SIGUIENTE →</div>
+              <div class="card-emoji">😢</div>
+              <div class="card-phrase">Está bien no estar bien. Este momento es difícil, y aun así estás aquí</div>
+            </div>
+          </div>
+          <div class="mood-label-bottom">triste</div>
+          <div class="swipe-hints">
+            <div class="swipe-hint"><div class="hint-icon">←</div> siguiente</div>
+            <div class="swipe-hint">guardar <div class="hint-icon">→</div></div>
+          </div>
+          <div class="back-btn">↩ cambiar</div>
+        </div>
+      </div>
+      <div class="phone-label">SWIPE IZQUIERDA → siguiente frase</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 5: RESUMEN TÉCNICO ===== -->
+<div class="concept-section">
+  <div class="section-title">Resumen de decisiones</div>
+  <div class="section-subtitle">Todo lo que define Tonin en un vistazo</div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <h4>Swipe = interacción core</h4>
+      <p>Derecha = guardar + siguiente. Izquierda = descartar + siguiente. La card se inclina, muestra badge, y sale. La siguiente sube desde el stack. Solo un botón queda: "↩ cambiar" para volver al selector.</p>
+      <div class="tag">framer-motion + use-gesture</div>
+    </div>
+    <div class="info-card">
+      <h4>Tema = sistema + toggle</h4>
+      <p>Por defecto sigue prefers-color-scheme. Toggle manual (☽/☀) arriba a la derecha en el home. Se persiste en localStorage. Modo claro = cremas cálidos, nunca blanco puro.</p>
+      <div class="tag">css variables + tailwind dark:</div>
+    </div>
+    <div class="info-card">
+      <h4>Cards apiladas</h4>
+      <p>3 cards visibles: la activa al frente, 2 detrás con scale reducido y blur. Da sensación de profundidad y de "hay más esperándote". Cada card es semitransparente con el color del estado.</p>
+      <div class="tag">z-index + transform + opacity</div>
+    </div>
+    <div class="info-card">
+      <h4>Hints de swipe</h4>
+      <p>Indicadores sutiles "← siguiente" y "guardar →" debajo del stack. Opacity muy baja. Desaparecen después del primer swipe (el usuario ya aprendió). Se guardan en localStorage.</p>
+      <div class="tag">onboarding progresivo</div>
+    </div>
+    <div class="info-card">
+      <h4>Mundos por estado</h4>
+      <p>colorPrimario/Secundario del backend definen gradientes y glows. fontFamily define la fuente de la frase. animationType define velocidad del breathing (lento=calma, rápido=energía). Todo dinámico.</p>
+      <div class="tag">css variables inyectadas desde api</div>
+    </div>
+    <div class="info-card">
+      <h4>Accesibilidad emocional</h4>
+      <p>Estados negativos primero en el grid. Frases validan antes de motivar. Mundo triste = refugio cálido, no espejo del dolor. Sin gamificación. Salida libre sin confirmación. Mute persistente.</p>
+      <div class="tag">ux emocional</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

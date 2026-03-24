@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tonin — Concepto v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: #08080d;
+    color: #e8e4df;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 300; }
+
+  /* ===== HEADER ===== */
+  .concept-header {
+    text-align: center;
+    padding: 60px 20px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .concept-header h1 {
+    font-size: 48px;
+    font-weight: 300;
+    letter-spacing: 8px;
+    color: #e8e4df;
+    margin-bottom: 12px;
+  }
+
+  .concept-header p {
+    font-size: 14px;
+    opacity: 0.4;
+    font-weight: 200;
+    line-height: 1.8;
+  }
+
+  .divider {
+    width: 40px;
+    height: 1px;
+    background: rgba(196, 168, 130, 0.3);
+    margin: 16px auto;
+  }
+
+  .label-sm {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.4;
+    font-weight: 300;
+    margin-bottom: 8px;
+  }
+
+  /* ===== SECTIONS ===== */
+  .concept-section {
+    padding: 40px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    margin-bottom: 6px;
+    color: #c4a882;
+  }
+
+  .section-subtitle {
+    font-size: 13px;
+    opacity: 0.45;
+    margin-bottom: 36px;
+    font-weight: 200;
+  }
+
+  /* ===== PHONE ===== */
+  .phone-frame {
+    width: 320px;
+    min-height: 640px;
+    border-radius: 40px;
+    border: 2px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+    position: relative;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.02),
+      0 40px 80px rgba(0,0,0,0.5);
+  }
+
+  .phone-notch {
+    width: 120px;
+    height: 28px;
+    background: inherit;
+    border-radius: 0 0 20px 20px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .phone-content {
+    padding: 0 24px 32px;
+    height: calc(100% - 28px);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .phones-row {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 24px;
+  }
+
+  .phone-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .phone-label {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 11px;
+    opacity: 0.3;
+    letter-spacing: 2px;
+    font-weight: 200;
+  }
+
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    opacity: 0.12;
+    padding-top: 40px;
+  }
+
+  /* ===== SCREEN: HOME ===== */
+  .screen-home {
+    background: linear-gradient(170deg, #0f1520 0%, #0a0a12 60%, #0d0a14 100%);
+  }
+
+  .screen-home .phone-notch { background: #0f1520; }
+
+  .screen-home .phone-content {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .ambient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    animation: drift 20s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .ambient-orb.orb-1 {
+    width: 160px; height: 160px;
+    background: rgba(196, 168, 130, 0.04);
+    top: 20%; left: 10%;
+  }
+
+  .ambient-orb.orb-2 {
+    width: 120px; height: 120px;
+    background: rgba(147, 130, 196, 0.03);
+    bottom: 25%; right: 5%;
+    animation-delay: -8s;
+  }
+
+  @keyframes drift {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(8px, -12px); }
+    50% { transform: translate(-5px, 8px); }
+    75% { transform: translate(10px, 5px); }
+  }
+
+  .home-greeting {
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 200;
+    opacity: 0.4;
+    margin-bottom: 4px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .home-question {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 300;
+    color: #f0ece6;
+    line-height: 1.4;
+    position: relative;
+    z-index: 2;
+    margin-bottom: 36px;
+  }
+
+  .mood-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+  }
+
+  .mood-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 16px 8px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    border: 1px solid rgba(255,255,255,0.03);
+  }
+
+  .mood-cell:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.08);
+    transform: scale(1.05);
+  }
+
+  .mood-cell .emoji {
+    font-size: 32px;
+    line-height: 1;
+  }
+
+  .mood-cell .name {
+    font-size: 12px;
+    font-weight: 300;
+    opacity: 0.6;
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== SCREEN: FELIZ ===== */
+  .screen-feliz {
+    background: linear-gradient(170deg, #1a1208 0%, #14100a 40%, #0a0d08 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .screen-feliz .phone-notch { background: #1a1208; }
+
+  .screen-feliz .glow {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .screen-feliz .glow-1 {
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(255, 183, 77, 0.1) 0%, transparent 70%);
+    top: -20px; left: -40px;
+    animation: breathe-warm 8s ease-in-out infinite;
+  }
+
+  .screen-feliz .glow-2 {
+    width: 180px; height: 180px;
+    background: radial-gradient(circle, rgba(129, 199, 132, 0.06) 0%, transparent 70%);
+    bottom: 80px; right: -50px;
+    animation: breathe-warm 10s ease-in-out infinite reverse;
+  }
+
+  @keyframes breathe-warm {
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.15); opacity: 1; }
+  }
+
+  .screen-feliz .phone-content {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 2;
+  }
+
+  .phrase-emoji {
+    font-size: 44px;
+    margin-bottom: 28px;
+    animation: gentle-float 5s ease-in-out infinite;
+  }
+
+  @keyframes gentle-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .phrase-text-feliz {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.7;
+    color: #f5e6d3;
+    max-width: 250px;
+    letter-spacing: 0.3px;
+  }
+
+  .phrase-mood-label {
+    margin-top: 32px;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0.2;
+  }
+
+  .audio-indicator {
+    position: absolute;
+    top: 40px;
+    right: 24px;
+    display: flex;
+    gap: 3px;
+    align-items: flex-end;
+    height: 18px;
+    opacity: 0.25;
+  }
+
+  .audio-indicator .bar {
+    width: 2px;
+    border-radius: 2px;
+    animation: wave 1.4s ease-in-out infinite;
+  }
+
+  .screen-feliz .audio-indicator .bar { background: rgba(255, 183, 77, 0.7); }
+  .bar:nth-child(1) { height: 6px; animation-delay: 0s; }
+  .bar:nth-child(2) { height: 12px; animation-delay: 0.15s; }
+  .bar:nth-child(3) { height: 8px; animation-delay: 0.3s; }
+  .bar:nth-child(4) { height: 14px; animation-delay: 0.45s; }
+  .bar:nth-child(5) { height: 5px; animation-delay: 0.6s; }
+
+  @keyframes wave {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.3); }
+  }
+
+  .phrase-controls {
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    align-items: center;
+  }
+
+  .ctrl-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    color: rgba(255,255,255,0.35);
+    background: rgba(255,255,255,0.02);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ctrl-btn:hover {
+    border-color: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.6);
+  }
+
+  .ctrl-btn.primary-feliz {
+    width: 52px; height: 52px;
+    border-color: rgba(255, 183, 77, 0.25);
+    color: rgba(255, 183, 77, 0.6);
+  }
+
+  /* ===== SCREEN: TRISTE ===== */
+  .screen-triste {
+    background: linear-gradient(170deg, #0a0f1a 0%, #0d0a18 40%, #08080f 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .screen-triste .phone-notch { background: #0a0f1a; }
+
+  .screen-triste .glow-1 {
+    width: 250px; height: 250px;
+    background: radial-gradient(circle, rgba(100, 149, 237, 0.06) 0%, transparent 70%);
+    top: 25%; left: 50%; transform: translateX(-50%);
+    animation: breathe-cool 10s ease-in-out infinite;
+  }
+
+  .screen-triste .glow-2 {
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, rgba(252, 211, 77, 0.03) 0%, transparent 70%);
+    bottom: 20%; left: 10%;
+    animation: breathe-cool 12s ease-in-out infinite reverse;
+  }
+
+  @keyframes breathe-cool {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.6; }
+    50% { transform: translateX(-50%) scale(1.12); opacity: 1; }
+  }
+
+  .screen-triste .phone-content {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 2;
+  }
+
+  .phrase-text-triste {
+    font-family: 'Fraunces', serif;
+    font-size: 21px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.8;
+    color: #c8d4e8;
+    max-width: 250px;
+    letter-spacing: 0.2px;
+  }
+
+  .screen-triste .audio-indicator .bar {
+    background: rgba(100, 149, 237, 0.5);
+    animation-duration: 2.2s;
+  }
+
+  .ctrl-btn.primary-triste {
+    width: 52px; height: 52px;
+    border-color: rgba(100, 149, 237, 0.2);
+    color: rgba(100, 149, 237, 0.5);
+  }
+
+  /* ===== SCREEN: MOTIVADO ===== */
+  .screen-motivado {
+    background: linear-gradient(170deg, #14080a 0%, #120a06 40%, #0a0a0d 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .screen-motivado .phone-notch { background: #14080a; }
+
+  .screen-motivado .glow-1 {
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(239, 68, 68, 0.08) 0%, transparent 70%);
+    top: 10%; right: -30px;
+    animation: breathe-fire 6s ease-in-out infinite;
+  }
+
+  .screen-motivado .glow-2 {
+    width: 160px; height: 160px;
+    background: radial-gradient(circle, rgba(251, 146, 60, 0.06) 0%, transparent 70%);
+    bottom: 30%; left: -30px;
+    animation: breathe-fire 8s ease-in-out infinite reverse;
+  }
+
+  @keyframes breathe-fire {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.2); opacity: 1; }
+  }
+
+  .phrase-text-motivado {
+    font-family: 'Outfit', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.7;
+    color: #fce4c8;
+    max-width: 250px;
+    letter-spacing: 0.8px;
+    text-transform: none;
+  }
+
+  .screen-motivado .audio-indicator .bar {
+    background: rgba(251, 146, 60, 0.6);
+    animation-duration: 1s;
+  }
+
+  .ctrl-btn.primary-motivado {
+    width: 52px; height: 52px;
+    border-color: rgba(251, 146, 60, 0.25);
+    color: rgba(251, 146, 60, 0.6);
+  }
+
+  /* ===== UX INSIGHTS ===== */
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .insight-card {
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.04);
+    background: rgba(255,255,255,0.015);
+  }
+
+  .insight-card h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #c4a882;
+    margin-bottom: 8px;
+  }
+
+  .insight-card p {
+    font-size: 13px;
+    line-height: 1.7;
+    opacity: 0.55;
+    font-weight: 200;
+  }
+
+  .insight-card .principle {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    opacity: 0.3;
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  /* ===== DO / DONT ===== */
+  .do-dont {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .do-col, .dont-col {
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid;
+  }
+
+  .do-col {
+    border-color: rgba(129, 199, 132, 0.15);
+    background: rgba(129, 199, 132, 0.03);
+  }
+
+  .dont-col {
+    border-color: rgba(239, 68, 68, 0.15);
+    background: rgba(239, 68, 68, 0.03);
+  }
+
+  .do-col h4 { color: #81c784; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 400; letter-spacing: 2px; margin-bottom: 12px; }
+  .dont-col h4 { color: #ef5350; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 400; letter-spacing: 2px; margin-bottom: 12px; }
+
+  .do-col li, .dont-col li {
+    font-size: 13px;
+    opacity: 0.6;
+    font-weight: 200;
+    margin-bottom: 6px;
+    list-style: none;
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .do-col li::before { content: '✓'; position: absolute; left: 0; color: #81c784; }
+  .dont-col li::before { content: '✕'; position: absolute; left: 0; color: #ef5350; }
+
+  /* ===== FLOW DIAGRAM ===== */
+  .flow-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin: 30px auto 10px;
+    flex-wrap: wrap;
+  }
+
+  .flow-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 20px;
+  }
+
+  .flow-step .step-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(196, 168, 130, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .flow-step .step-label {
+    font-size: 11px;
+    opacity: 0.4;
+    font-weight: 200;
+    text-align: center;
+    max-width: 80px;
+  }
+
+  .flow-step .step-time {
+    font-size: 9px;
+    opacity: 0.25;
+    font-weight: 200;
+  }
+
+  .flow-conn {
+    width: 30px;
+    height: 1px;
+    background: rgba(196, 168, 130, 0.15);
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="concept-header">
+  <div class="label-sm">Concepto v2 — con insights de UX emocional</div>
+  <h1>TONIN</h1>
+  <div class="divider"></div>
+  <p>Un refugio digital. Un susurro cuando lo necesitas.</p>
+
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="step-icon">👋</div>
+      <div class="step-label">Llegas</div>
+      <div class="step-time">0s</div>
+    </div>
+    <div class="flow-conn"></div>
+    <div class="flow-step">
+      <div class="step-icon">💭</div>
+      <div class="step-label">¿Cómo te sientes?</div>
+      <div class="step-time">1-3s</div>
+    </div>
+    <div class="flow-conn"></div>
+    <div class="flow-step">
+      <div class="step-icon">✨</div>
+      <div class="step-label">El mundo cambia</div>
+      <div class="step-time">~1s transición</div>
+    </div>
+    <div class="flow-conn"></div>
+    <div class="flow-step">
+      <div class="step-icon">🌙</div>
+      <div class="step-label">Tu frase, tu música</div>
+      <div class="step-time">∞</div>
+    </div>
+  </div>
+</div>
+
+<!-- FLUJO: 3 MUNDOS -->
+<div class="concept-section">
+  <div class="section-title">El flujo: una decisión, un mundo</div>
+  <div class="section-subtitle">El usuario toca cómo se siente → todo se transforma. 1 tap, < 5 segundos hasta la frase.</div>
+
+  <div class="phones-row">
+    <!-- HOME -->
+    <div class="phone-wrapper">
+      <div class="phone-frame screen-home">
+        <div class="phone-notch"></div>
+        <div class="ambient-orb orb-1"></div>
+        <div class="ambient-orb orb-2"></div>
+        <div class="phone-content">
+          <div class="home-greeting">Buenas noches</div>
+          <div class="home-question">¿Cómo te sientes<br>en este momento?</div>
+
+          <div class="mood-grid">
+            <div class="mood-cell">
+              <div class="emoji">😢</div>
+              <div class="name">Triste</div>
+            </div>
+            <div class="mood-cell">
+              <div class="emoji">😰</div>
+              <div class="name">Ansioso</div>
+            </div>
+            <div class="mood-cell">
+              <div class="emoji">😊</div>
+              <div class="name">Feliz</div>
+            </div>
+            <div class="mood-cell">
+              <div class="emoji">💪</div>
+              <div class="name">Motivado</div>
+            </div>
+            <div class="mood-cell">
+              <div class="emoji">😌</div>
+              <div class="name">Tranquilo</div>
+            </div>
+            <div class="mood-cell">
+              <div class="emoji">🤗</div>
+              <div class="name">Agradecido</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">INICIO</div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <!-- FELIZ -->
+    <div class="phone-wrapper">
+      <div class="phone-frame screen-feliz">
+        <div class="phone-notch"></div>
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+        <div class="audio-indicator">
+          <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        </div>
+        <div class="phone-content">
+          <div class="phrase-emoji">😊</div>
+          <div class="phrase-text-feliz">La felicidad no es una estación a la que llegas, sino una manera de viajar</div>
+          <div class="phrase-mood-label">feliz</div>
+          <div class="phrase-controls">
+            <div class="ctrl-btn">↩</div>
+            <div class="ctrl-btn primary-feliz">↻</div>
+            <div class="ctrl-btn">♡</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">FELIZ — DM Sans, ámbar cálido</div>
+    </div>
+
+    <!-- TRISTE -->
+    <div class="phone-wrapper">
+      <div class="phone-frame screen-triste">
+        <div class="phone-notch"></div>
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+        <div class="audio-indicator">
+          <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        </div>
+        <div class="phone-content">
+          <div class="phrase-emoji" style="animation-duration: 7s;">😢</div>
+          <div class="phrase-text-triste">Está bien no estar bien. Este momento es difícil, y aun así estás aquí</div>
+          <div class="phrase-mood-label">triste</div>
+          <div class="phrase-controls">
+            <div class="ctrl-btn">↩</div>
+            <div class="ctrl-btn primary-triste">↻</div>
+            <div class="ctrl-btn">♡</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">TRISTE — Fraunces, azul noche + dorado sutil</div>
+    </div>
+
+    <!-- MOTIVADO -->
+    <div class="phone-wrapper">
+      <div class="phone-frame screen-motivado">
+        <div class="phone-notch"></div>
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+        <div class="audio-indicator">
+          <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        </div>
+        <div class="phone-content">
+          <div class="phrase-emoji" style="animation-duration: 3.5s;">💪</div>
+          <div class="phrase-text-motivado">No esperes el momento perfecto. Toma el momento y hazlo perfecto</div>
+          <div class="phrase-mood-label">motivado</div>
+          <div class="phrase-controls">
+            <div class="ctrl-btn">↩</div>
+            <div class="ctrl-btn primary-motivado">↻</div>
+            <div class="ctrl-btn">♡</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">MOTIVADO — Outfit, rojo/naranja, ritmo rápido</div>
+    </div>
+  </div>
+</div>
+
+<!-- INSIGHT: QUÉ CAMBIA POR ESTADO -->
+<div class="concept-section">
+  <div class="section-title">Cada ánimo, un mundo distinto</div>
+  <div class="section-subtitle">No solo cambian los colores — cambia la personalidad entera de la app</div>
+
+  <div class="insights-grid">
+    <div class="insight-card">
+      <h4>Colores</h4>
+      <p>Cada estado tiene un gradiente de fondo y glows que "respiran". Feliz es ámbar cálido. Triste es azul noche con destellos dorados (refugio, no espejo del dolor). Motivado es rojo/naranja con energía.</p>
+      <div class="principle">Russell's Circumplex Model</div>
+    </div>
+    <div class="insight-card">
+      <h4>Tipografía</h4>
+      <p>La fuente de la frase cambia por estado. Feliz usa DM Sans (redondeada, amigable). Triste usa Fraunces (serif suave, acogedora). Motivado usa Outfit (geométrica, directa). Definido por el campo fontFamily del backend.</p>
+      <div class="principle">Bar & Neta, 2006 — curvas = seguridad</div>
+    </div>
+    <div class="insight-card">
+      <h4>Ritmo de animación</h4>
+      <p>La velocidad del breathing y del float cambia. Triste respira lento (10s ciclo) — invita a desacelerar. Motivado es rápido (6s) — genera energía. Definido por el campo animationType.</p>
+      <div class="principle">Respiratory Sinus Arrhythmia</div>
+    </div>
+    <div class="insight-card">
+      <h4>Audio ambiental</h4>
+      <p>Las barras de audio son sutiles — la música es fondo, no protagonista. Fade-in de 2s al entrar, fade-out de 1.5s al salir. Volumen al 60%. Mute persistente en localStorage. NUNCA corte abrupto.</p>
+      <div class="principle">Self-Determination Theory — autonomía</div>
+    </div>
+  </div>
+</div>
+
+<!-- UX EMOCIONAL -->
+<div class="concept-section">
+  <div class="section-title">Diseño emocional</div>
+  <div class="section-subtitle">Principios del agente UX/psicología aplicados</div>
+
+  <div class="do-dont">
+    <div class="do-col">
+      <h4>HACER</h4>
+      <ul>
+        <li>"¿Cómo te sientes en este momento?" — valida sin prescribir</li>
+        <li>Estados negativos primero en el grid (el usuario probablemente no está feliz)</li>
+        <li>Triste tiene azul cálido + dorado de esperanza — es un refugio, no un espejo</li>
+        <li>Frase para triste: "Está bien no estar bien" — valida antes de motivar</li>
+        <li>Botón volver sin confirmación — salida libre, sin culpa</li>
+        <li>Touch targets de 80px — personas estresadas tienen menor precisión motora</li>
+        <li>prefers-reduced-motion: solo fades suaves</li>
+        <li>Contraste mínimo 4.5:1 sobre cualquier fondo</li>
+      </ul>
+    </div>
+    <div class="dont-col">
+      <h4>NUNCA</h4>
+      <ul>
+        <li>"Anímate, la vida es bella" — toxic positivity</li>
+        <li>Gris frío o negro puro para estados tristes</li>
+        <li>Shake, bounce agresivo, o flash en animaciones</li>
+        <li>Streaks, puntos, gamificación — no es un juego</li>
+        <li>"¿Seguro que quieres salir?" — confirmshaming emocional</li>
+        <li>Notificaciones push de "te extrañamos"</li>
+        <li>Rating de frases — no pidas evaluación a quien busca consuelo</li>
+        <li>Compartir como CTA principal — el momento es íntimo</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- INTERACCIÓN -->
+<div class="concept-section">
+  <div class="section-title">3 acciones, nada más</div>
+  <div class="section-subtitle">En la pantalla de frase solo existen tres botones. Todo lo demás es espacio para sentir.</div>
+
+  <div class="insights-grid">
+    <div class="insight-card">
+      <h4>↩ Cambiar</h4>
+      <p>Vuelve al selector. Música fade-out 1.5s, colores se desvanecen al fondo neutro. Sin diálogo de confirmación.</p>
+    </div>
+    <div class="insight-card">
+      <h4>↻ Otra frase</h4>
+      <p>Nueva frase del mismo estado. Solo el texto cambia (crossfade 600ms). Imagen y música se mantienen. IDs anteriores se excluyen via API.</p>
+    </div>
+    <div class="insight-card">
+      <h4>♡ Guardar</h4>
+      <p>Guarda en localStorage. El corazón se llena con animación suave. Feature simple, sin cuenta de usuario. Accesible desde un futuro menú discreto.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
