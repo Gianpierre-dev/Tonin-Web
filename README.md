@@ -1,110 +1,104 @@
 # Tonin
 
-**Motivational phrases that match your mood.**
+**Frases motivacionales que se adaptan a tu estado de animo.**
 
-Tonin is an immersive web app that delivers motivational phrases based on how you feel. Pick your mood, and experience curated quotes with ambient music, dynamic color themes, and smooth swipe-based navigation inspired by Tinder.
+Tonin es una web app inmersiva que te muestra frases motivacionales segun como te sientes. Elegis tu mood y recibis frases curadas con musica ambiental, colores dinamicos y navegacion tipo swipe para una mejor experencia de usuario.
 
 ---
 
-## Features
+## Caracteristicas
 
-- **Mood selection** — Visual grid with emojis and custom icons per mood
-- **Swipe experience** — Tinder-style card swiping powered by Framer Motion + use-gesture
-- **Ambient music** — Each mood has its own background track with fade-in/out transitions
-- **Dynamic theming** — Colors, fonts, and animations adapt to the selected mood
-- **Animation presets** — Float, pulse, wave, and fade breathing effects per mood
-- **Dark / Light / System mode** — Theme toggle with system preference detection
-- **Favorites** — Save phrases with a right swipe, persisted in localStorage
-- **Accessibility** — Semantic HTML, ARIA labels, `prefers-reduced-motion` support
-- **Admin panel** — Protected dashboard for managing moods, phrases, and media uploads
-- **JWT authentication** — Secure admin access with token-based auth
-- **Responsive** — Mobile-first design
+- **Seleccion de mood** — Grid visual con emojis e iconos personalizados por estado de animo
+- **Experiencia swipe** — Tarjetas tipo Tinder con Framer Motion + use-gesture
+- **Musica ambiental** — Cada mood tiene su propio track con transiciones fade-in/out
+- **Theming dinamico** — Colores, fuentes y animaciones se adaptan al mood seleccionado
+- **Presets de animacion** — Efectos float, pulse, wave y fade por mood
+- **Dark / Light / System** — Toggle de tema con deteccion de preferencia del sistema
+- **Favoritos** — Guarda frases con swipe a la derecha, persistidos en localStorage
+- **Accesibilidad** — HTML semantico, ARIA labels, soporte `prefers-reduced-motion`
+- **Panel admin** — Dashboard protegido para gestionar moods, frases y uploads de media
+- **Autenticacion JWT** — Acceso admin seguro con tokens
+- **Responsive** — Diseno mobile-first
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
+| Capa | Tecnologia |
+|------|-----------|
 | Framework | React 19 + TypeScript |
 | Build | Vite 6 |
-| Styling | Tailwind CSS 4 |
-| State | Zustand (persisted) |
-| Animations | Framer Motion |
-| Gestures | @use-gesture/react |
+| Estilos | Tailwind CSS 4 |
+| Estado | Zustand (persistido) |
+| Animaciones | Framer Motion |
+| Gestos | @use-gesture/react |
 | Audio | Howler.js |
 | Routing | React Router 7 |
-| Validation | Zod |
-| UI Components | shadcn/ui + Radix UI |
+| Validacion | Zod |
+| Componentes UI | shadcn/ui + Radix UI |
 | HTTP | Axios |
 
-## Architecture
+## Arquitectura
 
 ```
 src/
 ├── features/           # Vertical slices
-│   ├── home/           # Mood selection screen
-│   ├── phrase/         # Swipe card experience
-│   └── admin/          # CRUD dashboard (lazy-loaded)
+│   ├── home/           # Pantalla de seleccion de mood
+│   ├── phrase/         # Experiencia swipe de frases
+│   └── admin/          # Dashboard CRUD (lazy-loaded)
 ├── shared/
-│   ├── api/            # Axios client & endpoint functions
+│   ├── api/            # Cliente Axios y funciones de endpoints
 │   ├── audio/          # AudioProvider + useAudio hook
-│   ├── hooks/          # Shared data hooks
-│   ├── store/          # Zustand global store
-│   ├── theme/          # ThemeProvider + mood theming
-│   └── ui/             # shadcn/ui components
+│   ├── hooks/          # Hooks compartidos
+│   ├── store/          # Store global con Zustand
+│   ├── theme/          # ThemeProvider + theming por mood
+│   └── ui/             # Componentes shadcn/ui
 └── lib/
-    ├── constants.ts    # Animation presets, thresholds, config
-    ├── schemas.ts      # Zod schemas & inferred types
-    └── utils.ts        # Helper functions
+    ├── constants.ts    # Presets de animacion, thresholds, config
+    ├── schemas.ts      # Schemas Zod y tipos inferidos
+    └── utils.ts        # Funciones utilitarias
 ```
 
-Feature-based architecture with a shared layer. Admin routes are code-split via `React.lazy` to keep the initial bundle lean.
+Arquitectura basada en features con capa compartida. Las rutas de admin estan code-split con `React.lazy` para mantener el bundle inicial liviano.
 
-## Getting Started
+## Empezar
 
-### Prerequisites
+### Requisitos
 
 - Node.js 18+
 - [pnpm](https://pnpm.io/)
-- [Tonin-Api](https://github.com/Gianpierre-dev/Tonin-Api) running locally (Spring Boot backend)
+- [Tonin-Api](https://github.com/Gianpierre-dev/Tonin-Api) corriendo localmente (backend Spring Boot)
 
-### Installation
+### Instalacion
 
 ```bash
-# Clone the repository
+# Clonar el repositorio
 git clone https://github.com/Gianpierre-dev/Tonin-Web.git
 cd Tonin-Web
 
-# Install dependencies
+# Instalar dependencias
 pnpm install
 
-# Configure environment
+# Configurar entorno
 cp .env.example .env
-# Edit .env with your API URL (default: http://localhost:8080)
+# Editar .env con la URL de tu API (por defecto: http://localhost:8080)
 
-# Start development server
+# Iniciar servidor de desarrollo
 pnpm dev
 ```
 
 ### Scripts
 
-| Command | Description |
+| Comando | Descripcion |
 |---------|-------------|
-| `pnpm dev` | Start dev server |
-| `pnpm build` | Type-check + production build |
-| `pnpm preview` | Preview production build |
-| `pnpm lint` | Run ESLint |
+| `pnpm dev` | Iniciar servidor de desarrollo |
+| `pnpm build` | Type-check + build de produccion |
+| `pnpm preview` | Preview del build de produccion |
+| `pnpm lint` | Ejecutar ESLint |
 
 ## Backend
 
-Tonin-Web consumes the [Tonin-Api](https://github.com/Gianpierre-dev/Tonin-Api) — a REST API built with Java 21 + Spring Boot that handles moods, phrases, authentication, and file storage via Wasabi S3.
+Tonin-Web consume la [Tonin-Api](https://github.com/Gianpierre-dev/Tonin-Api) — una API REST construida con Java 21 + Spring Boot que maneja moods, frases, autenticacion y almacenamiento de archivos via Wasabi S3.
 
-## Screenshots
 
-<!-- Add screenshots or a GIF demo here -->
-<!-- Example: -->
-<!-- ![Home Screen](docs/screenshots/home.png) -->
-<!-- ![Phrase Swipe](docs/screenshots/swipe.png) -->
-
-## License
+## Licencia
 
 MIT
