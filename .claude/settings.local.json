@@ -16,7 +16,10 @@
       "Bash(cat /c/dev/gian/Tonin-Web/src/shared/store/*.ts)",
       "Bash(pnpm build:*)",
       "Bash(pnpm lint:*)",
-      "Bash(ls /c/dev/gian/Tonin-Web/.env*)"
+      "Bash(ls /c/dev/gian/Tonin-Web/.env*)",
+      "Bash(ls C:/dev/gian/Tonin-Web/*.config.*)",
+      "Bash(ls C:/dev/gian/Tonin-Web/tsconfig*)",
+      "Bash(ls C:/dev/gian/Tonin-Web/LICENSE*)"
     ]
   }
 }
