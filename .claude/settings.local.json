@@ -12,7 +12,11 @@
       "Bash(git:*)",
       "Bash(pnpm add:*)",
       "Bash(pnpm dlx:*)",
-      "Bash(printf '\\\\n\\\\n')"
+      "Bash(printf '\\\\n\\\\n')",
+      "Bash(cat /c/dev/gian/Tonin-Web/src/shared/store/*.ts)",
+      "Bash(pnpm build:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(ls /c/dev/gian/Tonin-Web/.env*)"
     ]
   }
 }

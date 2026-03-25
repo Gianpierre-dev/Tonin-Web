@@ -25,4 +25,4 @@ export const AUDIO_DEFAULT_VOLUME = 0.6
 export const AUDIO_FADE_IN_MS = 2000
 export const AUDIO_FADE_OUT_MS = 1500
 
-export const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8080'
+export const API_BASE_URL = import.meta.env.VITE_API_URL ?? ''
