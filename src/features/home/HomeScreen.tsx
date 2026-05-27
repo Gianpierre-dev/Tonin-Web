@@ -69,6 +69,14 @@ export const HomeScreen = (): React.JSX.Element => {
 
       {/* Content */}
       <div className="z-10 flex flex-col items-center gap-8">
+        {/* Brand */}
+        <img
+          src="/logoSOMA.png"
+          alt="SOMA"
+          className="h-20 w-auto select-none"
+          draggable={false}
+        />
+
         {/* Greeting */}
         <p className="text-sm font-light tracking-wide text-text-light/50 dark:text-text-dark/50">
           {getGreeting()}
