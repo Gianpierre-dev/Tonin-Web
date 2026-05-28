@@ -129,7 +129,7 @@ const UploadsPage = (): React.JSX.Element => {
             Arrastra una imagen aqui o
           </p>
           <Button
-            variant="outline"
+            variant="default"
             size="sm"
             onClick={() => imageInputRef.current?.click()}
             disabled={imageLoading}
@@ -197,7 +197,7 @@ const UploadsPage = (): React.JSX.Element => {
             Arrastra un archivo de audio aqui o
           </p>
           <Button
-            variant="outline"
+            variant="default"
             size="sm"
             onClick={() => audioInputRef.current?.click()}
             disabled={audioLoading}
