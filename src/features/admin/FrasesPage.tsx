@@ -97,6 +97,7 @@ const FrasesPage = (): React.JSX.Element => {
         </Button>
       </div>
 
+      <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
       <Table>
         <TableHeader>
           <TableRow>
@@ -148,6 +149,7 @@ const FrasesPage = (): React.JSX.Element => {
           )}
         </TableBody>
       </Table>
+      </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-md">

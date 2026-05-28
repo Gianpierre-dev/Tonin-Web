@@ -11,17 +11,23 @@ interface UseAudioReturn {
 
 export const useAudio = (): UseAudioReturn => {
   const howlRef = useRef<Howl | null>(null)
+  const fadeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const isMuted = useAppStore((s) => s.isMuted)
   const volume = useAppStore((s) => s.volume)
 
   const stop = useCallback(() => {
+    if (fadeTimeoutRef.current) {
+      clearTimeout(fadeTimeoutRef.current)
+      fadeTimeoutRef.current = null
+    }
     const howl = howlRef.current
     if (!howl) return
     howl.fade(howl.volume(), 0, AUDIO_FADE_OUT_MS)
-    setTimeout(() => {
+    fadeTimeoutRef.current = setTimeout(() => {
       howl.unload()
       howlRef.current = null
+      fadeTimeoutRef.current = null
       setIsPlaying(false)
     }, AUDIO_FADE_OUT_MS)
   }, [])

@@ -1,4 +1,5 @@
 import React from 'react'
+import { hexToRgb } from '@/lib/utils'
 
 interface EmptyCardProps {
   colorPrimario: string
@@ -37,10 +38,3 @@ export const EmptyCard = ({ colorPrimario, onReset }: EmptyCardProps): React.JSX
   )
 }
 
-function hexToRgb(hex: string): string {
-  const cleaned = hex.replace('#', '')
-  const r = parseInt(cleaned.substring(0, 2), 16)
-  const g = parseInt(cleaned.substring(2, 4), 16)
-  const b = parseInt(cleaned.substring(4, 6), 16)
-  return `${r}, ${g}, ${b}`
-}

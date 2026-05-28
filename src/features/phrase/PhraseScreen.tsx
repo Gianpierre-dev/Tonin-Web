@@ -1,12 +1,15 @@
 import React, { useEffect, useCallback, useState, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router'
+import { hexToRgb } from '@/lib/utils'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAppStore } from '@/shared/store/useAppStore'
+import { useReducedMotion } from '@/shared/hooks/useReducedMotion'
 import { useAudioContext } from '@/shared/audio/AudioProvider'
 import { ANIMATION_PRESETS, DEFAULT_ANIMATION } from '@/lib/constants'
 import type { AnimationConfig } from '@/lib/constants'
 import { SwipeStack } from './SwipeStack'
 import { SwipeHints, markHintsSeen } from './SwipeHints'
+import { BrandLogo } from '@/shared/ui/BrandLogo'
 
 export const PhraseScreen = (): React.JSX.Element => {
   const { moodName } = useParams<{ moodName: string }>()
@@ -27,8 +30,7 @@ export const PhraseScreen = (): React.JSX.Element => {
   const colorPrimario = estado?.colorPrimario ?? '#c4a882'
   const colorSecundario = estado?.colorSecundario ?? '#a89278'
 
-  const prefersReducedMotion =
-    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const prefersReducedMotion = useReducedMotion()
 
   const animConfig = useMemo((): AnimationConfig => {
     const type = estado?.animationType ?? DEFAULT_ANIMATION
@@ -161,6 +163,11 @@ export const PhraseScreen = (): React.JSX.Element => {
           />
         </div>
 
+        {/* Brand (top-left) */}
+        <div className="absolute left-4 top-4 z-20">
+          <BrandLogo className="h-7 opacity-40" />
+        </div>
+
         {/* Audio indicator + mute button (top-right) */}
         <div className="absolute right-4 top-4 z-20 flex items-center gap-3">
           {/* Audio bars */}
@@ -251,10 +258,3 @@ export const PhraseScreen = (): React.JSX.Element => {
   )
 }
 
-function hexToRgb(hex: string): string {
-  const cleaned = hex.replace('#', '')
-  const r = parseInt(cleaned.substring(0, 2), 16)
-  const g = parseInt(cleaned.substring(2, 4), 16)
-  const b = parseInt(cleaned.substring(4, 6), 16)
-  return `${r}, ${g}, ${b}`
-}

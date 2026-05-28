@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Button } from '@/shared/ui/button'
+import { BrandLogo } from '@/shared/ui/BrandLogo'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { login } from '@/shared/api/endpoints'
@@ -37,7 +38,10 @@ const LoginScreen = (): React.JSX.Element => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-sm rounded-xl border bg-popover p-6 shadow-md">
-        <h1 className="text-xl font-semibold mb-6 text-center">SOMA Admin</h1>
+        <BrandLogo className="mx-auto mb-2 h-12" />
+        <h1 className="mb-6 text-center text-sm font-medium text-muted-foreground">
+          Panel de administración
+        </h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <Label htmlFor="username">Usuario</Label>

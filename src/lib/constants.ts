@@ -26,3 +26,5 @@ export const AUDIO_FADE_IN_MS = 2000
 export const AUDIO_FADE_OUT_MS = 1500
 
 export const API_BASE_URL = import.meta.env.VITE_API_URL ?? ''
+
+export const TOKEN_KEY = 'tonin_token'

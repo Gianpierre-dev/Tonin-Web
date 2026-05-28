@@ -1,7 +1,9 @@
 import React, { useEffect, useCallback, useRef, useState } from 'react'
+import { hexToRgb } from '@/lib/utils'
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion'
 import { useDrag } from '@use-gesture/react'
 import { useFraseRandom } from '@/shared/hooks/useFraseRandom'
+import { useReducedMotion } from '@/shared/hooks/useReducedMotion'
 import { useAppStore } from '@/shared/store/useAppStore'
 import { SWIPE_THRESHOLD, SWIPE_MAX_ROTATION } from '@/lib/constants'
 import { SwipeCard } from './SwipeCard'
@@ -27,14 +29,11 @@ export const SwipeStack = ({
   const toggleFavorite = useAppStore((s) => s.toggleFavorite)
   const resetExcluded = useAppStore((s) => s.resetExcluded)
 
+  const prefersReducedMotion = useReducedMotion()
   const hasFetched = useRef(false)
   const isAnimating = useRef(false)
   const [badgeOpacity, setBadgeOpacity] = useState(0)
   const [direction, setDirection] = useState<'left' | 'right' | null>(null)
-
-  const prefersReducedMotion =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
   const x = useMotionValue(0)
   const rotate = useTransform(x, [-300, 0, 300], [-SWIPE_MAX_ROTATION, 0, SWIPE_MAX_ROTATION])
@@ -152,7 +151,7 @@ export const SwipeStack = ({
 
   return (
     <div
-      className="relative flex h-[420px] w-full max-w-sm items-center justify-center"
+      className="relative flex h-[min(420px,60vh)] w-full max-w-sm items-center justify-center"
       aria-live="polite"
     >
       {/* Decorative cards behind */}
@@ -215,10 +214,3 @@ export const SwipeStack = ({
   )
 }
 
-function hexToRgb(hex: string): string {
-  const cleaned = hex.replace('#', '')
-  const r = parseInt(cleaned.substring(0, 2), 16)
-  const g = parseInt(cleaned.substring(2, 4), 16)
-  const b = parseInt(cleaned.substring(4, 6), 16)
-  return `${r}, ${g}, ${b}`
-}

@@ -4,6 +4,7 @@ import { useAppStore } from '@/shared/store/useAppStore'
 import { getGreeting } from '@/lib/utils'
 import type { EstadoAnimoDTO } from '@/lib/schemas'
 import { MoodGrid } from './MoodGrid'
+import { BrandLogo } from '@/shared/ui/BrandLogo'
 
 const THEME_CYCLE: Array<'system' | 'dark' | 'light'> = ['system', 'dark', 'light']
 
@@ -70,18 +71,7 @@ export const HomeScreen = (): React.JSX.Element => {
       {/* Content */}
       <div className="z-10 flex flex-col items-center gap-8">
         {/* Brand */}
-        <div className="relative flex items-center justify-center">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 -z-10 scale-[1.6] rounded-full bg-[image:var(--gradient-brand)] opacity-20 blur-2xl dark:opacity-30"
-          />
-          <img
-            src="/logoSOMA.png"
-            alt="SOMA"
-            className="h-20 w-auto select-none"
-            draggable={false}
-          />
-        </div>
+        <BrandLogo withGlow className="h-20" />
 
         {/* Greeting */}
         <p className="text-sm font-light tracking-wide text-text-light/50 dark:text-text-dark/50">

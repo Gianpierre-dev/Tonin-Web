@@ -1,5 +1,7 @@
+import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { useEstados } from '@/shared/hooks/useEstados'
+import { useReducedMotion } from '@/shared/hooks/useReducedMotion'
 import type { EstadoAnimoDTO } from '@/lib/schemas'
 import { MoodCell } from './MoodCell'
 
@@ -9,30 +11,32 @@ interface MoodGridProps {
 
 const SKELETON_COUNT = 6
 
-const prefersReducedMotion =
-  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: prefersReducedMotion ? 0 : 0.05,
-    },
-  },
-}
-
-const item = {
-  hidden: { opacity: 0, scale: prefersReducedMotion ? 1 : 0.9 },
-  show: { opacity: 1, scale: 1 },
-}
-
 export const MoodGrid = ({ onSelect }: MoodGridProps): React.JSX.Element => {
+  const prefersReducedMotion = useReducedMotion()
+
+  const container = useMemo(
+    () => ({
+      hidden: { opacity: 0 },
+      show: {
+        opacity: 1,
+        transition: { staggerChildren: prefersReducedMotion ? 0 : 0.05 },
+      },
+    }),
+    [prefersReducedMotion],
+  )
+
+  const item = useMemo(
+    () => ({
+      hidden: { opacity: 0, scale: prefersReducedMotion ? 1 : 0.9 },
+      show: { opacity: 1, scale: 1 },
+    }),
+    [prefersReducedMotion],
+  )
   const { estados, loading, error, retry } = useEstados()
 
   if (loading) {
     return (
-      <div className="grid w-full max-w-sm grid-cols-3 gap-3">
+      <div className="grid w-full max-w-sm grid-cols-2 gap-3 sm:grid-cols-3">
         {Array.from({ length: SKELETON_COUNT }, (_, i) => (
           <div
             key={i}
@@ -68,7 +72,7 @@ export const MoodGrid = ({ onSelect }: MoodGridProps): React.JSX.Element => {
 
   return (
     <motion.div
-      className="grid w-full max-w-sm grid-cols-3 gap-3"
+      className="grid w-full max-w-sm grid-cols-2 gap-3 sm:grid-cols-3"
       variants={container}
       initial="hidden"
       animate="show"

@@ -77,9 +77,8 @@ cd Tonin-Web
 # Instalar dependencias
 pnpm install
 
-# Configurar entorno
-cp .env.example .env
-# Editar .env con la URL de tu API (por defecto: http://localhost:8080)
+# El .env ya viene configurado (por defecto: http://localhost:8080)
+# Editalo si tu API corre en otra URL
 
 # Iniciar servidor de desarrollo
 pnpm dev

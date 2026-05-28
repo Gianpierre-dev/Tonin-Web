@@ -1,16 +1,15 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import type { EstadoAnimoDTO } from '@/lib/schemas'
+import { useReducedMotion } from '@/shared/hooks/useReducedMotion'
 
 interface MoodCellProps {
   estado: EstadoAnimoDTO
   onSelect: (estado: EstadoAnimoDTO) => void
 }
 
-const prefersReducedMotion =
-  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
 export const MoodCell = ({ estado, onSelect }: MoodCellProps): React.JSX.Element => {
+  const prefersReducedMotion = useReducedMotion()
   const [imgError, setImgError] = useState(false)
 
   return (

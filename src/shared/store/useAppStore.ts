@@ -5,6 +5,7 @@ import { getEstados } from '@/shared/api/endpoints'
 
 interface AppState {
   estados: EstadoAnimoDTO[]
+  estadosLoaded: boolean
   estadosLoading: boolean
   estadosError: string | null
   loadEstados: () => Promise<void>
@@ -33,13 +34,14 @@ export const useAppStore = create<AppState>()(
   persist(
     (set) => ({
       estados: [],
+      estadosLoaded: false,
       estadosLoading: false,
       estadosError: null,
       loadEstados: async () => {
         set({ estadosLoading: true, estadosError: null })
         try {
           const estados = await getEstados()
-          set({ estados, estadosLoading: false })
+          set({ estados, estadosLoaded: true, estadosLoading: false })
         } catch {
           set({ estadosError: 'No se pudieron cargar los estados', estadosLoading: false })
         }

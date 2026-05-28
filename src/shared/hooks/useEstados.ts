@@ -3,15 +3,16 @@ import { useAppStore } from '@/shared/store/useAppStore'
 
 export const useEstados = () => {
   const estados = useAppStore((s) => s.estados)
+  const loaded = useAppStore((s) => s.estadosLoaded)
   const loading = useAppStore((s) => s.estadosLoading)
   const error = useAppStore((s) => s.estadosError)
   const loadEstados = useAppStore((s) => s.loadEstados)
 
   useEffect(() => {
-    if (estados.length === 0 && !loading) {
+    if (!loaded && !loading) {
       void loadEstados()
     }
-  }, [estados.length, loading, loadEstados])
+  }, [loaded, loading, loadEstados])
 
   return { estados, loading, error, retry: loadEstados }
 }

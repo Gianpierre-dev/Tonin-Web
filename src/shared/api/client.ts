@@ -1,7 +1,5 @@
 import axios from 'axios'
-import { API_BASE_URL } from '@/lib/constants'
-
-const TOKEN_KEY = 'tonin_token'
+import { API_BASE_URL, TOKEN_KEY } from '@/lib/constants'
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
