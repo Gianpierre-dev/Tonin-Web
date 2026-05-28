@@ -3,6 +3,7 @@ import { Outlet, NavLink, useNavigate } from 'react-router'
 import { Button } from '@/shared/ui/button'
 import { MenuIcon, XIcon, LogOutIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { TOKEN_KEY } from '@/lib/constants'
 
 const NAV_ITEMS = [
   { to: '/admin/estados', label: 'Estados' },
@@ -15,14 +16,14 @@ const AdminLayout = (): React.JSX.Element => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const handleLogout = () => {
-    localStorage.removeItem('tonin_token')
+    localStorage.removeItem(TOKEN_KEY)
     navigate('/admin/login')
   }
 
   const sidebar = (
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between p-4 border-b">
-        <span className="text-lg font-semibold">Tonin Admin</span>
+        <span className="text-lg font-semibold">SOMA Admin</span>
         <Button
           variant="ghost"
           size="icon-sm"
@@ -97,7 +98,7 @@ const AdminLayout = (): React.JSX.Element => {
           >
             <MenuIcon />
           </Button>
-          <span className="text-sm font-semibold">Tonin Admin</span>
+          <span className="text-sm font-semibold">SOMA Admin</span>
         </header>
         <main className="flex-1 p-4 md:p-6 overflow-auto">
           <Outlet />

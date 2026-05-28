@@ -13,6 +13,13 @@
   --color-text-dark: #e8e4df;
   --color-text-light: #2a2520;
   --color-accent: #c4a882;
+
+  /* Identidad de marca SOMA (extraida del logo) */
+  --color-brand-violet: #605490;
+  --color-brand-violet-bright: #78609c;
+  --color-brand-coral: #f09c6c;
+  --color-brand-ink: #303c48;
+  --gradient-brand: linear-gradient(135deg, #605490 0%, #b47884 52%, #f09c6c 100%);
 }
 
 :root {
@@ -36,7 +43,7 @@
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --ring: #605490;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -114,7 +121,7 @@
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --ring: #78609c;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);

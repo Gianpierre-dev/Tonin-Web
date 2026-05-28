@@ -4,6 +4,7 @@ import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { login } from '@/shared/api/endpoints'
+import { TOKEN_KEY } from '@/lib/constants'
 import axios from 'axios'
 
 const LoginScreen = (): React.JSX.Element => {
@@ -20,7 +21,7 @@ const LoginScreen = (): React.JSX.Element => {
 
     try {
       const { token } = await login(username, password)
-      localStorage.setItem('tonin_token', token)
+      localStorage.setItem(TOKEN_KEY, token)
       navigate('/admin/estados')
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.status === 401) {
@@ -36,7 +37,7 @@ const LoginScreen = (): React.JSX.Element => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-sm rounded-xl border bg-popover p-6 shadow-md">
-        <h1 className="text-xl font-semibold mb-6 text-center">Tonin Admin</h1>
+        <h1 className="text-xl font-semibold mb-6 text-center">SOMA Admin</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <Label htmlFor="username">Usuario</Label>
@@ -51,7 +52,7 @@ const LoginScreen = (): React.JSX.Element => {
             />
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="password">Contrasena</Label>
+            <Label htmlFor="password">Contraseña</Label>
             <Input
               id="password"
               type="password"
