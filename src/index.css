@@ -1,7 +1,17 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+
+/* Fuentes self-hosted: permite endurecer la CSP eliminando los hosts de
+   Google Fonts (`style-src` y `font-src`). El admin solo puede elegir
+   alguna de estas (whitelist `ALLOWED_FONTS` en src/lib/fonts.ts). */
 @import "@fontsource-variable/geist";
+@import "@fontsource-variable/dm-sans";
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/outfit";
+@import "@fontsource-variable/lora";
+@import "@fontsource-variable/playfair-display";
+@import "@fontsource/cormorant-garamond";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -150,6 +160,13 @@
   75% {
     transform: translate(15px, 25px);
   }
+}
+
+/* Movido desde PhraseScreen.tsx para evitar re-inyección de <style> en cada
+   render y para poder endurecer la CSP (sin <style> tags inline). */
+@keyframes audioBar {
+  0% { height: 20%; }
+  100% { height: 100%; }
 }
 
 @layer base {

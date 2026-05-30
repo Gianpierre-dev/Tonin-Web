@@ -34,7 +34,24 @@ export const isTokenExpired = (token: string): boolean => {
   return Date.now() >= payload.exp * 1000
 }
 
+const HEX_COLOR_RE = /^#?[0-9a-fA-F]{6}$/
+
+/**
+ * Sanitiza un color hex. Devuelve el valor canónico con `#` o el fallback si
+ * el input no es un hex válido. Defensa en profundidad contra CSS injection
+ * cuando el valor termina interpolado en `style={{ background: ... }}` o
+ * `rgba(${hexToRgb(...)},...)`.
+ */
+export const sanitizeHex = (value: string | null | undefined, fallback: string): string => {
+  if (typeof value !== 'string' || !HEX_COLOR_RE.test(value)) return fallback
+  return value.startsWith('#') ? value : `#${value}`
+}
+
 export const hexToRgb = (hex: string): string => {
+  // Guard: si llega un hex malformado (back, valor del store viejo, lo que
+  // sea), devolvemos un rgb neutral en vez de `NaN, NaN, NaN` que rompía
+  // visualmente las cards y los fondos.
+  if (!HEX_COLOR_RE.test(hex)) return '196, 168, 130' // brand accent fallback
   const cleaned = hex.replace('#', '')
   const r = parseInt(cleaned.substring(0, 2), 16)
   const g = parseInt(cleaned.substring(2, 4), 16)
@@ -42,18 +59,7 @@ export const hexToRgb = (hex: string): string => {
   return `${r}, ${g}, ${b}`
 }
 
-import { isAllowedFont } from './fonts'
-
-export const loadFont = (family: string): void => {
-  // Whitelist: si llega cualquier cosa que no esté en la lista cerrada
-  // (config del back, valor inyectado por admin, etc.) la ignoramos. Sin
-  // esto, un `family` con comilla simple/`;` podía pisar la cascada CSS
-  // donde luego se usa la var --mood-font.
-  if (!isAllowedFont(family)) return
-  if (document.fonts.check(`16px "${family}"`)) return
-  const link = document.createElement('link')
-  link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family).replace(/%20/g, '+')}:wght@300;400;500;700&display=swap`
-  link.rel = 'stylesheet'
-  link.onerror = () => link.remove()
-  document.head.appendChild(link)
-}
+// `loadFont` se eliminó: las fuentes del whitelist (@/lib/fonts) ahora se
+// importan en src/index.css vía paquetes @fontsource. Eso permite quitar
+// los hosts de Google de la CSP y elimina la inyección dinámica de <link>
+// en runtime.

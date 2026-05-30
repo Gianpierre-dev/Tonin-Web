@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useAppStore } from '@/shared/store/useAppStore'
-import { loadFont } from '@/lib/utils'
+import { sanitizeHex } from '@/lib/utils'
 import { isAllowedFont } from '@/lib/fonts'
 
 export const useMoodTheme = (): void => {
@@ -16,17 +16,18 @@ export const useMoodTheme = (): void => {
       return
     }
 
+    // Colores: sanitizamos contra hex válido antes de meterlos en la CSS var.
+    // Si el back devuelve algo malformado, queda el fallback de marca.
     if (activeMood.colorPrimario) {
-      root.style.setProperty('--mood-primary', activeMood.colorPrimario)
+      root.style.setProperty('--mood-primary', sanitizeHex(activeMood.colorPrimario, '#c4a882'))
     }
     if (activeMood.colorSecundario) {
-      root.style.setProperty('--mood-secondary', activeMood.colorSecundario)
+      root.style.setProperty('--mood-secondary', sanitizeHex(activeMood.colorSecundario, '#a89278'))
     }
     // Whitelist: solo seteamos la CSS var si la fuente está en la lista
-    // permitida. Sin esto, un valor con comilla simple o `;` desde el back
-    // podía pisar la cascada (CSS injection).
+    // permitida (mitiga CSS injection vía comilla simple/`;` en el valor).
+    // Las fuentes ya están bundle-eadas vía index.css, no hace falta cargarlas.
     if (isAllowedFont(activeMood.fontFamily)) {
-      loadFont(activeMood.fontFamily)
       root.style.setProperty('--mood-font', `'${activeMood.fontFamily}', 'Outfit', system-ui, sans-serif`)
     }
   }, [activeMood])

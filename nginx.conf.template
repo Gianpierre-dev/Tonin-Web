@@ -4,6 +4,9 @@ server {
     root /usr/share/nginx/html;
     index index.html;
 
+    # No revelar version de nginx en error pages y Server header.
+    server_tokens off;
+
     # Railway private networking: las IPs internas cambian en cada redeploy,
     # por eso usamos el resolver interno (IPv6) + upstream en variable para
     # forzar la re-resolucion DNS en cada request en lugar de cachearla.
@@ -11,10 +14,10 @@ server {
     set $backend http://tonin-api.railway.internal:8080;
 
     # ----- Cabeceras de seguridad globales -----
-    # `always` las aplica incluso a respuestas 4xx/5xx (no solo 2xx/3xx).
-    # CSP: la inline-style es necesaria por los style={{...}} en React + Google Fonts.
-    # Si en algun momento se self-hostean las fuentes, quitar `unsafe-inline` y los hosts de Google.
-    add_header Content-Security-Policy "default-src 'self'; img-src 'self' data: https:; media-src 'self' https:; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" always;
+    # CSP endurecida: fuentes self-hosted via @fontsource (sin Google Fonts),
+    # `upgrade-insecure-requests` fuerza HTTPS en cualquier subrecurso mixto.
+    # `style-src 'unsafe-inline'` permanece por <style> de libs (radix, framer).
+    add_header Content-Security-Policy "default-src 'self'; img-src 'self' data: https:; media-src 'self' https:; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" always;
     add_header X-Frame-Options "DENY" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
@@ -44,8 +47,16 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
+    # Assets estaticos: las cabeceras add_header dentro de un `location`
+    # PISAN las del server-block (cuirk de nginx), por eso hay que re-declararlas
+    # aca para que los 404 de un asset inexistente igual lleven CSP/HSTS/etc.
     location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff2?)$ {
         expires 1y;
-        add_header Cache-Control "public, immutable";
+        add_header Cache-Control "public, immutable" always;
+        add_header Content-Security-Policy "default-src 'self'; img-src 'self' data: https:; media-src 'self' https:; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" always;
+        add_header X-Frame-Options "DENY" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
     }
 }

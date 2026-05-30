@@ -7,7 +7,7 @@ import { useAppStore } from '@/shared/store/useAppStore'
 import { useEstados } from '@/shared/hooks/useEstados'
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion'
 import { useAudioContext } from '@/shared/audio/AudioProvider'
-import { ANIMATION_PRESETS, DEFAULT_ANIMATION } from '@/lib/constants'
+import { getAnimationPreset } from '@/lib/constants'
 import type { AnimationConfig } from '@/lib/constants'
 import { SwipeStack } from './SwipeStack'
 import { SwipeHints, markHintsSeen } from './SwipeHints'
@@ -38,12 +38,10 @@ export const PhraseScreen = (): React.JSX.Element => {
 
   const prefersReducedMotion = useReducedMotion()
 
-  const animConfig = useMemo((): AnimationConfig => {
-    const type = estado?.animationType ?? DEFAULT_ANIMATION
-    const preset = ANIMATION_PRESETS[type] ?? ANIMATION_PRESETS[DEFAULT_ANIMATION]
-    // DEFAULT_ANIMATION ('fade') always exists in ANIMATION_PRESETS
-    return preset ?? { duration: 10, opacity: [0.7, 1], ease: 'easeInOut' as const }
-  }, [estado])
+  const animConfig: AnimationConfig = useMemo(
+    () => getAnimationPreset(estado?.animationType),
+    [estado?.animationType],
+  )
 
   // Set active mood on mount, clear on unmount
   useEffect(() => {
@@ -254,13 +252,6 @@ export const PhraseScreen = (): React.JSX.Element => {
           {t('phrase.back')}
         </motion.button>
 
-        {/* Audio bar keyframes (injected via style tag) */}
-        <style>{`
-          @keyframes audioBar {
-            0% { height: 20%; }
-            100% { height: 100%; }
-          }
-        `}</style>
       </motion.main>
     </AnimatePresence>
   )
