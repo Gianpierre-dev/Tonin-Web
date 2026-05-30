@@ -10,7 +10,7 @@ import { SwipeCard } from './SwipeCard'
 import { EmptyCard } from './EmptyCard'
 
 interface SwipeStackProps {
-  moodName: string
+  codigo: string
   colorPrimario: string
   onSwipe: () => void
   onBack: () => void
@@ -20,12 +20,12 @@ const FLYOUT_DISTANCE = 500
 const FLYOUT_ROTATION = 30
 
 export const SwipeStack = ({
-  moodName,
+  codigo,
   colorPrimario,
   onSwipe,
   onBack,
 }: SwipeStackProps): React.JSX.Element => {
-  const { frase, isEmpty, loading, error, fetchNext } = useFraseRandom(moodName)
+  const { frase, isEmpty, loading, error, fetchNext } = useFraseRandom(codigo)
   const toggleFavorite = useAppStore((s) => s.toggleFavorite)
   const resetExcluded = useAppStore((s) => s.resetExcluded)
 

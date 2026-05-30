@@ -20,7 +20,7 @@ const App = (): React.JSX.Element => {
           <Suspense fallback={<div className="min-h-screen bg-warm-black" />}>
             <Routes>
               <Route path="/" element={<HomeScreen />} />
-              <Route path="/phrase/:moodName" element={<PhraseScreen />} />
+              <Route path="/phrase/:codigo" element={<PhraseScreen />} />
               <Route path="/admin/login" element={<LoginScreen />} />
               <Route path="/admin" element={<ProtectedRoute />}>
                 <Route element={<AdminLayout />}>

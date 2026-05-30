@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import i18n from '@/i18n'
 import { Button } from '@/shared/ui/button'
 import {
   Table,
@@ -29,16 +30,19 @@ const EstadosPage = (): React.JSX.Element => {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingEstado, setEditingEstado] = useState<EstadoAnimoDTO | undefined>()
 
+  // Usamos `i18n.t` (no el `t` del hook) para que `fetchEstados` no cambie de
+  // identidad al togglear idioma — antes cada toggle disparaba un re-fetch
+  // completo del listado. El `t` del hook se sigue usando en el render.
   const fetchEstados = useCallback(async () => {
     try {
       const data = await getEstados()
       setEstados(data)
     } catch (err) {
-      setCrudError(getErrorMessage(err, t('admin.estadosPage.loadError')))
+      setCrudError(getErrorMessage(err, i18n.t('admin.estadosPage.loadError')))
     } finally {
       setLoading(false)
     }
-  }, [t])
+  }, [])
 
   useEffect(() => {
     void fetchEstados()

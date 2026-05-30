@@ -1,8 +1,10 @@
 import { useState, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import i18n from '@/i18n'
 import { Button } from '@/shared/ui/button'
 import { uploadImagen, uploadMusica, deleteUpload } from '@/shared/api/endpoints'
 import { getErrorMessage } from '@/lib/getErrorMessage'
+import { validateImageFile, validateAudioFile } from '@/lib/uploadValidation'
 import { TrashIcon, UploadIcon, CopyIcon, CheckIcon } from 'lucide-react'
 
 const IMAGE_ACCEPT = '.jpeg,.jpg,.png,.gif,.webp'
@@ -25,6 +27,8 @@ const UploadsPage = (): React.JSX.Element => {
   const imageInputRef = useRef<HTMLInputElement>(null)
   const audioInputRef = useRef<HTMLInputElement>(null)
 
+  // `i18n.t` (no `t` del hook) para que estos callbacks no cambien de
+  // identidad al togglear idioma.
   const handleImageUpload = useCallback(async (file: File) => {
     setError('')
     setImageLoading(true)
@@ -35,11 +39,11 @@ const UploadsPage = (): React.JSX.Element => {
         ...prev,
       ])
     } catch (err) {
-      setError(getErrorMessage(err, t('admin.uploads.errorImage')))
+      setError(getErrorMessage(err, i18n.t('admin.uploads.errorImage')))
     } finally {
       setImageLoading(false)
     }
-  }, [t])
+  }, [])
 
   const handleAudioUpload = useCallback(async (file: File) => {
     setError('')
@@ -51,22 +55,38 @@ const UploadsPage = (): React.JSX.Element => {
         ...prev,
       ])
     } catch (err) {
-      setError(getErrorMessage(err, t('admin.uploads.errorAudio')))
+      setError(getErrorMessage(err, i18n.t('admin.uploads.errorAudio')))
     } finally {
       setAudioLoading(false)
     }
-  }, [t])
+  }, [])
 
+  // Validación unificada: la usan tanto file-picker como drag&drop. Antes el
+  // botón confiaba SOLO en el atributo `accept` (bypasseable) y el drop
+  // validaba por extensión del nombre (también bypasseable). Ahora MIME real
+  // y tamaño, en defensa en profundidad con el back.
   const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) void handleImageUpload(file)
     e.target.value = ''
+    if (!file) return
+    const result = validateImageFile(file)
+    if (!result.ok) {
+      setError(result.message)
+      return
+    }
+    void handleImageUpload(file)
   }
 
   const handleAudioFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) void handleAudioUpload(file)
     e.target.value = ''
+    if (!file) return
+    const result = validateAudioFile(file)
+    if (!result.ok) {
+      setError(result.message)
+      return
+    }
+    void handleAudioUpload(file)
   }
 
   const handleDrop = (tipo: 'imagen' | 'musica') => (e: React.DragEvent<HTMLDivElement>) => {
@@ -74,19 +94,14 @@ const UploadsPage = (): React.JSX.Element => {
     const file = e.dataTransfer.files[0]
     if (!file) return
 
+    const result = tipo === 'imagen' ? validateImageFile(file) : validateAudioFile(file)
+    if (!result.ok) {
+      setError(result.message)
+      return
+    }
     if (tipo === 'imagen') {
-      const validImage = /\.(jpe?g|png|gif|webp)$/i.test(file.name)
-      if (!validImage) {
-        setError(t('admin.uploads.invalidImageFormat'))
-        return
-      }
       void handleImageUpload(file)
     } else {
-      const validAudio = /\.(mp3|wav|ogg)$/i.test(file.name)
-      if (!validAudio) {
-        setError(t('admin.uploads.invalidAudioFormat'))
-        return
-      }
       void handleAudioUpload(file)
     }
   }

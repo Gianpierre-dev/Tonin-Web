@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import i18n from '@/i18n'
 import { Button } from '@/shared/ui/button'
 import {
   Table,
@@ -34,16 +35,18 @@ const FrasesPage = (): React.JSX.Element => {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingFrase, setEditingFrase] = useState<FraseDTO | undefined>()
 
+  // `i18n.t` (no `t` del hook) para que el callback no cambie de identidad
+  // al togglear idioma y no se dispare un re-fetch en cadena.
   const fetchFrases = useCallback(async () => {
     try {
       const data = await getFrases()
       setFrases(data)
     } catch (err) {
-      setCrudError(getErrorMessage(err, t('admin.frasesPage.loadError')))
+      setCrudError(getErrorMessage(err, i18n.t('admin.frasesPage.loadError')))
     } finally {
       setLoading(false)
     }
-  }, [t])
+  }, [])
 
   useEffect(() => {
     void fetchFrases()

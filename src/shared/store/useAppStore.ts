@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { EstadoAnimoDTO } from '@/lib/schemas'
 import { getEstados } from '@/shared/api/endpoints'
+import { logError } from '@/lib/logError'
 
 interface AppState {
   estados: EstadoAnimoDTO[]
@@ -45,7 +46,8 @@ export const useAppStore = create<AppState>()(
         try {
           const estados = await getEstados()
           set({ estados, estadosLoaded: true, estadosLoading: false })
-        } catch {
+        } catch (err) {
+          logError('useAppStore.loadEstados', err)
           set({ estadosError: 'No se pudieron cargar los estados', estadosLoading: false })
         }
       },

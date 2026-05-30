@@ -21,10 +21,12 @@ export const getEstados = async (): Promise<EstadoAnimoDTO[]> => {
 }
 
 export const getFraseRandom = async (
-  animo: string,
+  codigo: string,
   excluidos: number[] = [],
 ): Promise<FraseDTO | null> => {
-  const params: Record<string, string> = { animo }
+  // El back recibe el query param como `animo` (case-insensitive) por
+  // backward-compat, pero el valor que va es el `codigo` del estado.
+  const params: Record<string, string> = { animo: codigo }
   if (excluidos.length > 0) {
     params.excluidos = excluidos.join(',')
   }

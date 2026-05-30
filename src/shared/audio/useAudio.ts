@@ -2,6 +2,7 @@ import { useRef, useCallback, useState, useEffect } from 'react'
 import { Howl } from 'howler'
 import { useAppStore } from '@/shared/store/useAppStore'
 import { AUDIO_FADE_IN_MS, AUDIO_FADE_OUT_MS } from '@/lib/constants'
+import { logError } from '@/lib/logError'
 
 interface UseAudioReturn {
   play: (url: string) => void
@@ -72,7 +73,14 @@ export const useAudio = (): UseAudioReturn => {
         howl.mute(muted)
         howl.fade(0, vol, AUDIO_FADE_IN_MS)
       },
-      onloaderror: () => {
+      onloaderror: (_id, error) => {
+        logError('useAudio.onloaderror', error, { url })
+        setIsPlaying(false)
+      },
+      // Autoplay denegado en mobile / sin user-gesture. Sin esto era silencio
+      // total: el indicador de audio quedaba apagado sin pista del motivo.
+      onplayerror: (_id, error) => {
+        logError('useAudio.onplayerror', error, { url })
         setIsPlaying(false)
       },
     })

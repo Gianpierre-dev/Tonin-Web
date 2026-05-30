@@ -10,7 +10,8 @@ describe('estadoAnimoDTOSchema', () => {
   it('parses a valid estado', () => {
     const data = {
       id: 1,
-      nombre: 'FELIZ',
+      codigo: 'feliz',
+      nombre: 'Feliz',
       emoji: '😊',
       iconUrl: null,
       musicaUrl: 'https://example.com/music.mp3',
@@ -19,19 +20,39 @@ describe('estadoAnimoDTOSchema', () => {
       colorSecundario: '#FFA500',
       fontFamily: 'Outfit',
       animationType: 'float',
+      traducciones: { es: 'Feliz', en: 'Happy' },
     }
     expect(estadoAnimoDTOSchema.parse(data)).toEqual(data)
+  })
+
+  it('parses estado with only es translation', () => {
+    const data = {
+      id: 1,
+      codigo: 'feliz',
+      nombre: 'Feliz',
+      emoji: '😊',
+      iconUrl: null,
+      musicaUrl: null,
+      imagenUrl: null,
+      colorPrimario: null,
+      colorSecundario: null,
+      fontFamily: null,
+      animationType: null,
+      traducciones: { es: 'Feliz' },
+    }
+    expect(estadoAnimoDTOSchema.parse(data).traducciones.en).toBeUndefined()
   })
 
   it('rejects missing required fields', () => {
     expect(() => estadoAnimoDTOSchema.parse({ id: 1 })).toThrow()
   })
 
-  it('rejects invalid id type', () => {
+  it('rejects estado without traducciones', () => {
     expect(() =>
       estadoAnimoDTOSchema.parse({
-        id: 'not-a-number',
-        nombre: 'FELIZ',
+        id: 1,
+        codigo: 'feliz',
+        nombre: 'Feliz',
         emoji: '😊',
         iconUrl: null,
         musicaUrl: null,
@@ -40,6 +61,25 @@ describe('estadoAnimoDTOSchema', () => {
         colorSecundario: null,
         fontFamily: null,
         animationType: null,
+      }),
+    ).toThrow()
+  })
+
+  it('rejects invalid id type', () => {
+    expect(() =>
+      estadoAnimoDTOSchema.parse({
+        id: 'not-a-number',
+        codigo: 'feliz',
+        nombre: 'Feliz',
+        emoji: '😊',
+        iconUrl: null,
+        musicaUrl: null,
+        imagenUrl: null,
+        colorPrimario: null,
+        colorSecundario: null,
+        fontFamily: null,
+        animationType: null,
+        traducciones: { es: 'Feliz' },
       }),
     ).toThrow()
   })
@@ -52,7 +92,8 @@ describe('fraseDTOSchema', () => {
       texto: 'Todo va a estar bien',
       estadoAnimo: {
         id: 1,
-        nombre: 'FELIZ',
+        codigo: 'feliz',
+        nombre: 'Feliz',
         emoji: '😊',
         iconUrl: null,
         musicaUrl: null,
@@ -61,13 +102,38 @@ describe('fraseDTOSchema', () => {
         colorSecundario: null,
         fontFamily: null,
         animationType: null,
+        traducciones: { es: 'Feliz', en: 'Happy' },
       },
+      traducciones: { es: 'Todo va a estar bien', en: 'It will be alright' },
     }
     expect(fraseDTOSchema.parse(data)).toEqual(data)
   })
 
   it('rejects frase without estadoAnimo', () => {
     expect(() => fraseDTOSchema.parse({ id: 1, texto: 'test' })).toThrow()
+  })
+
+  it('rejects frase without traducciones', () => {
+    expect(() =>
+      fraseDTOSchema.parse({
+        id: 1,
+        texto: 'test',
+        estadoAnimo: {
+          id: 1,
+          codigo: 'feliz',
+          nombre: 'Feliz',
+          emoji: '😊',
+          iconUrl: null,
+          musicaUrl: null,
+          imagenUrl: null,
+          colorPrimario: null,
+          colorSecundario: null,
+          fontFamily: null,
+          animationType: null,
+          traducciones: { es: 'Feliz' },
+        },
+      }),
+    ).toThrow()
   })
 })
 

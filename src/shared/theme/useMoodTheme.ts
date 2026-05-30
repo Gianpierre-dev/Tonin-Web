@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useAppStore } from '@/shared/store/useAppStore'
 import { loadFont } from '@/lib/utils'
+import { isAllowedFont } from '@/lib/fonts'
 
 export const useMoodTheme = (): void => {
   const activeMood = useAppStore((s) => s.activeMood)
@@ -21,7 +22,10 @@ export const useMoodTheme = (): void => {
     if (activeMood.colorSecundario) {
       root.style.setProperty('--mood-secondary', activeMood.colorSecundario)
     }
-    if (activeMood.fontFamily) {
+    // Whitelist: solo seteamos la CSS var si la fuente está en la lista
+    // permitida. Sin esto, un valor con comilla simple o `;` desde el back
+    // podía pisar la cascada (CSS injection).
+    if (isAllowedFont(activeMood.fontFamily)) {
       loadFont(activeMood.fontFamily)
       root.style.setProperty('--mood-font', `'${activeMood.fontFamily}', 'Outfit', system-ui, sans-serif`)
     }

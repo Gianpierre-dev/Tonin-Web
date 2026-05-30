@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import i18n from '@/i18n'
 import { Button } from '@/shared/ui/button'
 import { Label } from '@/shared/ui/label'
 import { Textarea } from '@/shared/ui/textarea'
@@ -41,17 +42,19 @@ const FraseForm = ({ frase, onSubmit, onClose }: FraseFormProps): React.JSX.Elem
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  // `i18n.t` (no `t` del hook) para no re-fetchear estados cada vez que se
+  // cambia el idioma con el dialog abierto.
   useEffect(() => {
     const fetchEstados = async () => {
       try {
         const data = await getEstados()
         setEstados(data)
       } catch (err) {
-        setError(getErrorMessage(err, t('admin.form.errorLoadEstados')))
+        setError(getErrorMessage(err, i18n.t('admin.form.errorLoadEstados')))
       }
     }
     void fetchEstados()
-  }, [t])
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()

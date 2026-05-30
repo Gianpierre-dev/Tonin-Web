@@ -18,16 +18,13 @@ import {
 } from '@/shared/ui/dialog'
 import { uploadImagen, uploadMusica } from '@/shared/api/endpoints'
 import { getErrorMessage } from '@/lib/getErrorMessage'
+import { validateImageFile, validateAudioFile } from '@/lib/uploadValidation'
+import { ALLOWED_FONTS } from '@/lib/fonts'
 import type { EstadoAnimoDTO, EstadoAnimoWriteDTO } from '@/lib/schemas'
 
-const FONT_OPTIONS = [
-  'DM Sans',
-  'Fraunces',
-  'Outfit',
-  'Cormorant Garamond',
-  'Playfair Display',
-  'Lora',
-] as const
+// Las fuentes vienen de la whitelist compartida en @/lib/fonts para que el
+// admin no pueda elegir una que después el theming descarte por seguridad.
+const FONT_OPTIONS = ALLOWED_FONTS
 
 const ANIMATION_OPTIONS = ['float', 'pulse', 'wave', 'fade'] as const
 
@@ -61,6 +58,11 @@ const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.E
   const handleIconUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
+    const validation = validateImageFile(file)
+    if (!validation.ok) {
+      setError(validation.message)
+      return
+    }
     try {
       const result = await uploadImagen(file)
       setIconUrl(result.url)
@@ -72,6 +74,11 @@ const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.E
   const handleMusicaUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
+    const validation = validateAudioFile(file)
+    if (!validation.ok) {
+      setError(validation.message)
+      return
+    }
     try {
       const result = await uploadMusica(file)
       setMusicaUrl(result.url)
@@ -83,6 +90,11 @@ const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.E
   const handleImagenUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
+    const validation = validateImageFile(file)
+    if (!validation.ok) {
+      setError(validation.message)
+      return
+    }
     try {
       const result = await uploadImagen(file)
       setImagenUrl(result.url)

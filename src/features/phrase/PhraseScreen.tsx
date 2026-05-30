@@ -15,7 +15,7 @@ import { BrandLogo } from '@/shared/ui/BrandLogo'
 
 export const PhraseScreen = (): React.JSX.Element => {
   const { t } = useTranslation()
-  const { moodName } = useParams<{ moodName: string }>()
+  const { codigo } = useParams<{ codigo: string }>()
   const navigate = useNavigate()
   // `useEstados()` dispara la carga si todavía no se cargaron. Sin esto, un
   // deep-link a /phrase/:codigo (refresh o link compartido) dejaba el array
@@ -29,8 +29,8 @@ export const PhraseScreen = (): React.JSX.Element => {
   const [hintsVisible, setHintsVisible] = useState(true)
 
   const estado = useMemo(
-    () => estados.find((e) => e.codigo === moodName),
-    [estados, moodName],
+    () => estados.find((e) => e.codigo === codigo),
+    [estados, codigo],
   )
 
   const colorPrimario = estado?.colorPrimario ?? '#c4a882'
@@ -217,7 +217,7 @@ export const PhraseScreen = (): React.JSX.Element => {
           transition={{ duration: 0.4, delay: 0.3 }}
         >
           <SwipeStack
-            moodName={moodName ?? ''}
+            codigo={codigo ?? ''}
             colorPrimario={colorPrimario}
             onSwipe={handleSwipe}
             onBack={handleBack}

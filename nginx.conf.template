@@ -10,8 +10,30 @@ server {
     resolver [fd12::10] ipv6=on valid=1s;
     set $backend http://tonin-api.railway.internal:8080;
 
+    # ----- Cabeceras de seguridad globales -----
+    # `always` las aplica incluso a respuestas 4xx/5xx (no solo 2xx/3xx).
+    # CSP: la inline-style es necesaria por los style={{...}} en React + Google Fonts.
+    # Si en algun momento se self-hostean las fuentes, quitar `unsafe-inline` y los hosts de Google.
+    add_header Content-Security-Policy "default-src 'self'; img-src 'self' data: https:; media-src 'self' https:; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()" always;
+    add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+
     location / {
         try_files $uri $uri/ /index.html;
+    }
+
+    # Uploads admin con limite explicito de body para evitar consumo abusivo
+    # contra Wasabi. 20 MB cubre las imagenes/audio que el form acepta.
+    location /api/uploads/ {
+        client_max_body_size 20m;
+        proxy_pass $backend;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 
     location /api/ {

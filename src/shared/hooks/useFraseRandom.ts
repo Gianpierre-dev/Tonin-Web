@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
+import i18n from '@/i18n'
 import { getFraseRandom } from '@/shared/api/endpoints'
 import { useAppStore } from '@/shared/store/useAppStore'
+import { logError } from '@/lib/logError'
 import type { FraseDTO } from '@/lib/schemas'
 
 interface UseFraseRandomReturn {
@@ -12,8 +13,7 @@ interface UseFraseRandomReturn {
   fetchNext: () => Promise<void>
 }
 
-export const useFraseRandom = (moodName: string): UseFraseRandomReturn => {
-  const { t } = useTranslation()
+export const useFraseRandom = (codigo: string): UseFraseRandomReturn => {
   const [frase, setFrase] = useState<FraseDTO | null>(null)
   const [isEmpty, setIsEmpty] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -29,7 +29,7 @@ export const useFraseRandom = (moodName: string): UseFraseRandomReturn => {
     setIsEmpty(false) // limpiar bandera previa antes del intento
     try {
       const currentExcluded = useAppStore.getState().excludedIds
-      const result = await getFraseRandom(moodName, currentExcluded)
+      const result = await getFraseRandom(codigo, currentExcluded)
       if (result === null) {
         setFrase(null) // limpiar frase vieja si el back ya no tiene más
         setIsEmpty(true)
@@ -37,12 +37,14 @@ export const useFraseRandom = (moodName: string): UseFraseRandomReturn => {
         setFrase(result)
         addExcludedId(result.id)
       }
-    } catch {
-      setError(t('phrase.error'))
+    } catch (err) {
+      logError('useFraseRandom.fetchNext', err, { codigo })
+      // `i18n.t` global: el mensaje sigue el idioma activo al MOMENTO del error.
+      setError(i18n.t('phrase.error'))
     } finally {
       setLoading(false)
     }
-  }, [moodName, addExcludedId, t])
+  }, [codigo, addExcludedId])
 
   return { frase, isEmpty, loading, error, fetchNext }
 }
