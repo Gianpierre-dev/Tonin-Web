@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/shared/ui/button'
 import { Label } from '@/shared/ui/label'
 import { Textarea } from '@/shared/ui/textarea'
@@ -16,19 +17,23 @@ import {
   DialogDescription,
 } from '@/shared/ui/dialog'
 import { getEstados } from '@/shared/api/endpoints'
-import type { EstadoAnimoDTO, FraseDTO } from '@/lib/schemas'
+import { getErrorMessage } from '@/lib/getErrorMessage'
+import type { EstadoAnimoDTO, FraseDTO, FraseWriteDTO } from '@/lib/schemas'
 
 const MIN_CHARS = 5
 const MAX_CHARS = 500
 
 interface FraseFormProps {
   frase?: FraseDTO
-  onSubmit: (texto: string, estadoAnimoId: number) => Promise<void>
+  onSubmit: (data: FraseWriteDTO) => Promise<void>
   onClose: () => void
 }
 
 const FraseForm = ({ frase, onSubmit, onClose }: FraseFormProps): React.JSX.Element => {
-  const [texto, setTexto] = useState(frase?.texto ?? '')
+  const { t } = useTranslation()
+  const isEditing = frase !== undefined
+  const [tradEs, setTradEs] = useState(frase?.traducciones.es ?? '')
+  const [tradEn, setTradEn] = useState(frase?.traducciones.en ?? '')
   const [estadoAnimoId, setEstadoAnimoId] = useState(
     frase?.estadoAnimo.id.toString() ?? '',
   )
@@ -41,79 +46,98 @@ const FraseForm = ({ frase, onSubmit, onClose }: FraseFormProps): React.JSX.Elem
       try {
         const data = await getEstados()
         setEstados(data)
-      } catch {
-        setError('Error al cargar estados')
+      } catch (err) {
+        setError(getErrorMessage(err, t('admin.form.errorLoadEstados')))
       }
     }
     void fetchEstados()
-  }, [])
+  }, [t])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError('')
 
-    if (texto.length < MIN_CHARS || texto.length > MAX_CHARS) {
-      setError(`El texto debe tener entre ${MIN_CHARS} y ${MAX_CHARS} caracteres`)
+    if (tradEs.trim().length === 0) {
+      setError(t('admin.form.esRequired'))
       return
     }
-
+    if (tradEs.length < MIN_CHARS || tradEs.length > MAX_CHARS) {
+      setError(t('admin.form.charsOutOfRange', { min: MIN_CHARS, max: MAX_CHARS }))
+      return
+    }
     if (!estadoAnimoId) {
-      setError('Selecciona un estado de animo')
+      setError(t('admin.form.selectMood'))
       return
     }
 
     setLoading(true)
     try {
-      await onSubmit(texto, Number(estadoAnimoId))
+      await onSubmit({
+        traducciones: {
+          es: tradEs.trim(),
+          ...(tradEn.trim().length > 0 ? { en: tradEn.trim() } : {}),
+        },
+        estadoAnimoId: Number(estadoAnimoId),
+      })
       onClose()
-    } catch {
-      setError('Error al guardar frase')
+    } catch (err) {
+      setError(getErrorMessage(err, t('admin.form.errorSaveFrase')))
     } finally {
       setLoading(false)
     }
   }
 
-  const charCount = texto.length
-  const isOverLimit = charCount > MAX_CHARS
-  const isUnderLimit = charCount > 0 && charCount < MIN_CHARS
+  const charCountEs = tradEs.length
+  const isOverLimit = charCountEs > MAX_CHARS
+  const isUnderLimit = charCountEs > 0 && charCountEs < MIN_CHARS
 
   return (
     <>
       <DialogHeader>
-        <DialogTitle>{frase ? 'Editar Frase' : 'Nueva Frase'}</DialogTitle>
-        <DialogDescription>
-          Las frases deben validar el sentimiento antes de ofrecer perspectiva.
-        </DialogDescription>
+        <DialogTitle>{isEditing ? t('admin.form.fraseEdit') : t('admin.form.fraseNew')}</DialogTitle>
+        <DialogDescription>{t('admin.form.fraseDesc')}</DialogDescription>
       </DialogHeader>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {/* Traducción ES */}
         <div className="flex flex-col gap-2">
-          <Label htmlFor="frase-texto">Texto</Label>
+          <Label htmlFor="frase-trad-es">{t('admin.form.labelEs')}</Label>
           <Textarea
-            id="frase-texto"
-            value={texto}
-            onChange={(e) => setTexto(e.target.value)}
-            placeholder="Escribe la frase motivacional..."
+            id="frase-trad-es"
+            value={tradEs}
+            onChange={(e) => setTradEs(e.target.value)}
+            placeholder="Sé feliz hoy"
             required
-            rows={4}
+            rows={3}
           />
           <p
             className={`text-xs ${
-              isOverLimit || isUnderLimit
-                ? 'text-destructive'
-                : 'text-muted-foreground'
+              isOverLimit || isUnderLimit ? 'text-destructive' : 'text-muted-foreground'
             }`}
           >
-            {charCount}/{MAX_CHARS} caracteres
-            {isUnderLimit && ` (minimo ${MIN_CHARS})`}
+            {t('admin.form.charCount', { count: charCountEs, max: MAX_CHARS })}
+            {isUnderLimit && t('admin.form.charMin', { min: MIN_CHARS })}
           </p>
         </div>
 
+        {/* Traducción EN */}
         <div className="flex flex-col gap-2">
-          <Label>Estado de Animo</Label>
+          <Label htmlFor="frase-trad-en">{t('admin.form.labelEn')}</Label>
+          <Textarea
+            id="frase-trad-en"
+            value={tradEn}
+            onChange={(e) => setTradEn(e.target.value)}
+            placeholder="Be happy today"
+            rows={3}
+          />
+        </div>
+
+        {/* Estado de ánimo */}
+        <div className="flex flex-col gap-2">
+          <Label>{t('admin.form.moodLabel')}</Label>
           <Select value={estadoAnimoId} onValueChange={setEstadoAnimoId}>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Seleccionar estado..." />
+              <SelectValue placeholder={t('admin.form.selectMood')} />
             </SelectTrigger>
             <SelectContent>
               {estados.map((estado) => (
@@ -129,10 +153,10 @@ const FraseForm = ({ frase, onSubmit, onClose }: FraseFormProps): React.JSX.Elem
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={onClose}>
-            Cancelar
+            {t('common.cancel')}
           </Button>
           <Button type="submit" disabled={loading || isOverLimit}>
-            {loading ? 'Guardando...' : 'Guardar'}
+            {loading ? t('common.saving') : t('common.save')}
           </Button>
         </DialogFooter>
       </form>

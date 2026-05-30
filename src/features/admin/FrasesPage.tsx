@@ -17,7 +17,7 @@ import {
   deleteFrase,
 } from '@/shared/api/endpoints'
 import { getErrorMessage } from '@/lib/getErrorMessage'
-import type { FraseDTO } from '@/lib/schemas'
+import type { FraseDTO, FraseWriteDTO } from '@/lib/schemas'
 import FraseForm from './FraseForm'
 import { PlusIcon, PencilIcon, TrashIcon } from 'lucide-react'
 
@@ -70,12 +70,12 @@ const FrasesPage = (): React.JSX.Element => {
     }
   }
 
-  const handleSubmit = async (texto: string, estadoAnimoId: number) => {
+  const handleSubmit = async (data: FraseWriteDTO) => {
     setCrudError('')
     if (editingFrase) {
-      await updateFrase(editingFrase.id, texto, estadoAnimoId)
+      await updateFrase(editingFrase.id, data)
     } else {
-      await createFrase(texto, estadoAnimoId)
+      await createFrase(data)
     }
     await fetchFrases()
   }

@@ -6,6 +6,7 @@ const mockEstado: EstadoAnimoDTO = {
   id: 1,
   codigo: 'feliz',
   nombre: 'Feliz',
+  traducciones: { es: 'Feliz', en: 'Happy' },
   emoji: '😊',
   iconUrl: null,
   musicaUrl: null,

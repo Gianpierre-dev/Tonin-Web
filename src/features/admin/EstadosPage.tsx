@@ -17,7 +17,7 @@ import {
   deleteEstado,
 } from '@/shared/api/endpoints'
 import { getErrorMessage } from '@/lib/getErrorMessage'
-import type { EstadoAnimoDTO } from '@/lib/schemas'
+import type { EstadoAnimoDTO, EstadoAnimoWriteDTO } from '@/lib/schemas'
 import EstadoForm from './EstadoForm'
 import { PlusIcon, PencilIcon, TrashIcon } from 'lucide-react'
 
@@ -65,7 +65,7 @@ const EstadosPage = (): React.JSX.Element => {
     }
   }
 
-  const handleSubmit = async (data: Omit<EstadoAnimoDTO, 'id'>) => {
+  const handleSubmit = async (data: EstadoAnimoWriteDTO) => {
     setCrudError('')
     if (editingEstado) {
       await updateEstado(editingEstado.id, data)

@@ -2,7 +2,9 @@ import axios from 'axios'
 import { apiClient } from './client'
 import {
   type EstadoAnimoDTO,
+  type EstadoAnimoWriteDTO,
   type FraseDTO,
+  type FraseWriteDTO,
   type AuthResponse,
   type UploadResponse,
   estadoAnimoDTOSchema,
@@ -49,12 +51,12 @@ export const getEstadoById = async (id: number): Promise<EstadoAnimoDTO> => {
   return estadoAnimoDTOSchema.parse(data)
 }
 
-export const createEstado = async (body: Omit<EstadoAnimoDTO, 'id'>): Promise<EstadoAnimoDTO> => {
+export const createEstado = async (body: EstadoAnimoWriteDTO): Promise<EstadoAnimoDTO> => {
   const { data } = await apiClient.post<unknown>('/api/estados', body)
   return estadoAnimoDTOSchema.parse(data)
 }
 
-export const updateEstado = async (id: number, body: Omit<EstadoAnimoDTO, 'id'>): Promise<EstadoAnimoDTO> => {
+export const updateEstado = async (id: number, body: EstadoAnimoWriteDTO): Promise<EstadoAnimoDTO> => {
   const { data } = await apiClient.put<unknown>(`/api/estados/${id}`, body)
   return estadoAnimoDTOSchema.parse(data)
 }
@@ -69,13 +71,18 @@ export const getFrases = async (): Promise<FraseDTO[]> => {
   return z.array(fraseDTOSchema).parse(data)
 }
 
-export const createFrase = async (texto: string, estadoAnimoId: number): Promise<FraseDTO> => {
-  const { data } = await apiClient.post<unknown>('/api/frases', { texto, estadoAnimoId })
+export const getFraseById = async (id: number): Promise<FraseDTO> => {
+  const { data } = await apiClient.get<unknown>(`/api/frases/${id}`)
   return fraseDTOSchema.parse(data)
 }
 
-export const updateFrase = async (id: number, texto: string, estadoAnimoId: number): Promise<FraseDTO> => {
-  const { data } = await apiClient.put<unknown>(`/api/frases/${id}`, { texto, estadoAnimoId })
+export const createFrase = async (body: FraseWriteDTO): Promise<FraseDTO> => {
+  const { data } = await apiClient.post<unknown>('/api/frases', body)
+  return fraseDTOSchema.parse(data)
+}
+
+export const updateFrase = async (id: number, body: FraseWriteDTO): Promise<FraseDTO> => {
+  const { data } = await apiClient.put<unknown>(`/api/frases/${id}`, body)
   return fraseDTOSchema.parse(data)
 }
 

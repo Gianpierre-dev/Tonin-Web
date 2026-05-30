@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
@@ -16,7 +17,8 @@ import {
   DialogDescription,
 } from '@/shared/ui/dialog'
 import { uploadImagen, uploadMusica } from '@/shared/api/endpoints'
-import type { EstadoAnimoDTO } from '@/lib/schemas'
+import { getErrorMessage } from '@/lib/getErrorMessage'
+import type { EstadoAnimoDTO, EstadoAnimoWriteDTO } from '@/lib/schemas'
 
 const FONT_OPTIONS = [
   'DM Sans',
@@ -31,13 +33,16 @@ const ANIMATION_OPTIONS = ['float', 'pulse', 'wave', 'fade'] as const
 
 interface EstadoFormProps {
   estado?: EstadoAnimoDTO
-  onSubmit: (data: Omit<EstadoAnimoDTO, 'id'>) => Promise<void>
+  onSubmit: (data: EstadoAnimoWriteDTO) => Promise<void>
   onClose: () => void
 }
 
 const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.Element => {
+  const { t } = useTranslation()
+  const isEditing = estado !== undefined
   const [codigo, setCodigo] = useState(estado?.codigo ?? '')
-  const [nombre, setNombre] = useState(estado?.nombre ?? '')
+  const [tradEs, setTradEs] = useState(estado?.traducciones.es ?? '')
+  const [tradEn, setTradEn] = useState(estado?.traducciones.en ?? '')
   const [emoji, setEmoji] = useState(estado?.emoji ?? '')
   const [iconUrl, setIconUrl] = useState(estado?.iconUrl ?? '')
   const [colorPrimario, setColorPrimario] = useState(estado?.colorPrimario ?? '#000000')
@@ -59,8 +64,8 @@ const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.E
     try {
       const result = await uploadImagen(file)
       setIconUrl(result.url)
-    } catch {
-      setError('Error al subir icono')
+    } catch (err) {
+      setError(getErrorMessage(err, t('admin.form.errorUploadIcon')))
     }
   }
 
@@ -70,8 +75,8 @@ const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.E
     try {
       const result = await uploadMusica(file)
       setMusicaUrl(result.url)
-    } catch {
-      setError('Error al subir musica')
+    } catch (err) {
+      setError(getErrorMessage(err, t('admin.form.errorUploadMusica')))
     }
   }
 
@@ -81,20 +86,25 @@ const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.E
     try {
       const result = await uploadImagen(file)
       setImagenUrl(result.url)
-    } catch {
-      setError('Error al subir imagen')
+    } catch (err) {
+      setError(getErrorMessage(err, t('admin.form.errorUploadImagen')))
     }
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError('')
-    setLoading(true)
 
+    // Validación cliente: el back ya exige `es` (400), pero damos feedback inmediato.
+    if (tradEs.trim().length === 0) {
+      setError(t('admin.form.esRequired'))
+      return
+    }
+
+    setLoading(true)
     try {
       await onSubmit({
         codigo,
-        nombre,
         emoji,
         iconUrl: iconUrl || null,
         colorPrimario: colorPrimario || null,
@@ -103,10 +113,15 @@ const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.E
         animationType: animationType || null,
         musicaUrl: musicaUrl || null,
         imagenUrl: imagenUrl || null,
+        traducciones: {
+          es: tradEs.trim(),
+          // En vacío → mandamos undefined para que el back guarde solo lo que hay.
+          ...(tradEn.trim().length > 0 ? { en: tradEn.trim() } : {}),
+        },
       })
       onClose()
-    } catch {
-      setError('Error al guardar estado')
+    } catch (err) {
+      setError(getErrorMessage(err, t('admin.form.errorSaveEstado')))
     } finally {
       setLoading(false)
     }
@@ -115,65 +130,81 @@ const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.E
   return (
     <>
       <DialogHeader>
-        <DialogTitle>{estado ? 'Editar Estado' : 'Nuevo Estado'}</DialogTitle>
-        <DialogDescription>
-          {estado ? 'Modifica los campos del estado de animo.' : 'Crea un nuevo estado de animo.'}
-        </DialogDescription>
+        <DialogTitle>{isEditing ? t('admin.form.estadoEdit') : t('admin.form.estadoNew')}</DialogTitle>
+        <DialogDescription>{t('admin.form.estadoDesc')}</DialogDescription>
       </DialogHeader>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div className="grid grid-cols-2 gap-4">
+        {/* Código (slug) — inmutable en edición */}
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="estado-codigo">{t('admin.form.codigoLabel')}</Label>
+          <Input
+            id="estado-codigo"
+            value={codigo}
+            onChange={(e) => setCodigo(e.target.value)}
+            placeholder="feliz, muy-feliz"
+            pattern="^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            title={t('admin.form.codigoHelp')}
+            required
+            disabled={isEditing}
+          />
+          <p className="text-xs text-muted-foreground">
+            {isEditing ? t('admin.form.codigoLocked') : t('admin.form.codigoHelp')}
+          </p>
+        </div>
+
+        {/* Traducciones del nombre */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="estado-codigo">Código (slug)</Label>
+            <Label htmlFor="estado-trad-es">{t('admin.form.labelEs')}</Label>
             <Input
-              id="estado-codigo"
-              value={codigo}
-              onChange={(e) => setCodigo(e.target.value)}
-              placeholder="feliz, muy-feliz"
-              pattern="^[a-z0-9]+(?:-[a-z0-9]+)*$"
-              title="Sólo minúsculas, números y guiones (kebab-case)"
-              required
-              disabled={estado !== undefined}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="estado-nombre">Nombre</Label>
-            <Input
-              id="estado-nombre"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
+              id="estado-trad-es"
+              value={tradEs}
+              onChange={(e) => setTradEs(e.target.value)}
               placeholder="Feliz"
               required
             />
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="estado-emoji">Emoji</Label>
-            <div className="flex items-center gap-2">
-              <Input
-                id="estado-emoji"
-                value={emoji}
-                onChange={(e) => setEmoji(e.target.value)}
-                placeholder="😊"
-                required
-                className="flex-1"
-              />
-              {emoji && <span className="text-2xl">{emoji}</span>}
-            </div>
+            <Label htmlFor="estado-trad-en">{t('admin.form.labelEn')}</Label>
+            <Input
+              id="estado-trad-en"
+              value={tradEn}
+              onChange={(e) => setTradEn(e.target.value)}
+              placeholder="Happy"
+            />
           </div>
         </div>
 
+        {/* Emoji */}
         <div className="flex flex-col gap-2">
-          <Label htmlFor="estado-icon">Icono (URL)</Label>
+          <Label htmlFor="estado-emoji">{t('admin.form.emoji')}</Label>
+          <div className="flex items-center gap-2">
+            <Input
+              id="estado-emoji"
+              value={emoji}
+              onChange={(e) => setEmoji(e.target.value)}
+              placeholder="😊"
+              required
+              className="flex-1"
+            />
+            {emoji && <span className="text-2xl">{emoji}</span>}
+          </div>
+        </div>
+
+        {/* Icono */}
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="estado-icon">{t('admin.form.icon')}</Label>
           <div className="flex items-center gap-2">
             <Input
               id="estado-icon"
               value={iconUrl}
               onChange={(e) => setIconUrl(e.target.value)}
-              placeholder="URL del icono..."
+              placeholder="https://..."
               className="flex-1"
             />
             <Button type="button" variant="outline" size="sm" onClick={() => iconFileRef.current?.click()}>
-              Subir
+              {t('admin.form.upload')}
             </Button>
             <input
               ref={iconFileRef}
@@ -184,13 +215,14 @@ const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.E
             />
           </div>
           {iconUrl && (
-            <img src={iconUrl} alt="Icon preview" className="h-8 w-8 rounded object-cover" />
+            <img src={iconUrl} alt="" className="h-8 w-8 rounded object-cover" />
           )}
         </div>
 
+        {/* Colores */}
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="estado-color-primario">Color Primario</Label>
+            <Label htmlFor="estado-color-primario">{t('admin.form.colorPrimary')}</Label>
             <div className="flex items-center gap-2">
               <input
                 id="estado-color-primario"
@@ -207,7 +239,7 @@ const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.E
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="estado-color-secundario">Color Secundario</Label>
+            <Label htmlFor="estado-color-secundario">{t('admin.form.colorSecondary')}</Label>
             <div className="flex items-center gap-2">
               <input
                 id="estado-color-secundario"
@@ -225,9 +257,10 @@ const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.E
           </div>
         </div>
 
+        {/* Fuente y animación */}
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col gap-2">
-            <Label>Fuente</Label>
+            <Label>{t('admin.form.font')}</Label>
             <Select value={fontFamily} onValueChange={setFontFamily}>
               <SelectTrigger className="w-full">
                 <SelectValue />
@@ -242,7 +275,7 @@ const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.E
             </Select>
           </div>
           <div className="flex flex-col gap-2">
-            <Label>Animacion</Label>
+            <Label>{t('admin.form.animation')}</Label>
             <Select value={animationType} onValueChange={setAnimationType}>
               <SelectTrigger className="w-full">
                 <SelectValue />
@@ -258,17 +291,18 @@ const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.E
           </div>
         </div>
 
+        {/* Música */}
         <div className="flex flex-col gap-2">
-          <Label>Musica</Label>
+          <Label>{t('admin.form.music')}</Label>
           <div className="flex items-center gap-2">
             <Input
               value={musicaUrl}
               onChange={(e) => setMusicaUrl(e.target.value)}
-              placeholder="URL de musica..."
+              placeholder="https://..."
               className="flex-1"
             />
             <Button type="button" variant="outline" size="sm" onClick={() => musicaFileRef.current?.click()}>
-              Subir
+              {t('admin.form.upload')}
             </Button>
             <input
               ref={musicaFileRef}
@@ -285,17 +319,18 @@ const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.E
           )}
         </div>
 
+        {/* Imagen */}
         <div className="flex flex-col gap-2">
-          <Label>Imagen</Label>
+          <Label>{t('admin.form.image')}</Label>
           <div className="flex items-center gap-2">
             <Input
               value={imagenUrl}
               onChange={(e) => setImagenUrl(e.target.value)}
-              placeholder="URL de imagen..."
+              placeholder="https://..."
               className="flex-1"
             />
             <Button type="button" variant="outline" size="sm" onClick={() => imagenFileRef.current?.click()}>
-              Subir
+              {t('admin.form.upload')}
             </Button>
             <input
               ref={imagenFileRef}
@@ -306,7 +341,7 @@ const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.E
             />
           </div>
           {imagenUrl && (
-            <img src={imagenUrl} alt="Preview" className="h-20 w-20 rounded object-cover" />
+            <img src={imagenUrl} alt="" className="h-20 w-20 rounded object-cover" />
           )}
         </div>
 
@@ -314,10 +349,10 @@ const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.E
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={onClose}>
-            Cancelar
+            {t('common.cancel')}
           </Button>
           <Button type="submit" disabled={loading}>
-            {loading ? 'Guardando...' : 'Guardar'}
+            {loading ? t('common.saving') : t('common.save')}
           </Button>
         </DialogFooter>
       </form>
