@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback, useState, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { hexToRgb } from '@/lib/utils'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAppStore } from '@/shared/store/useAppStore'
@@ -12,6 +13,7 @@ import { SwipeHints, markHintsSeen } from './SwipeHints'
 import { BrandLogo } from '@/shared/ui/BrandLogo'
 
 export const PhraseScreen = (): React.JSX.Element => {
+  const { t } = useTranslation()
   const { moodName } = useParams<{ moodName: string }>()
   const navigate = useNavigate()
   const estados = useAppStore((s) => s.estados)
@@ -195,7 +197,7 @@ export const PhraseScreen = (): React.JSX.Element => {
             style={{
               background: `rgba(${hexToRgb(colorPrimario)}, 0.1)`,
             }}
-            aria-label={isMuted ? 'Activar sonido' : 'Silenciar'}
+            aria-label={isMuted ? t('phrase.unmute') : t('phrase.mute')}
           >
             {isMuted ? '🔇' : '🔊'}
           </button>
@@ -231,7 +233,7 @@ export const PhraseScreen = (): React.JSX.Element => {
         <motion.button
           type="button"
           onClick={handleBack}
-          aria-label="Volver a selección de estado de ánimo"
+          aria-label={t('phrase.backAria')}
           className="absolute bottom-8 z-20 rounded-full px-5 py-2 text-sm transition-colors"
           style={{
             color: colorPrimario,
@@ -243,7 +245,7 @@ export const PhraseScreen = (): React.JSX.Element => {
           whileHover={prefersReducedMotion ? undefined : { scale: 1.05 }}
           whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
         >
-          ↩ cambiar
+          {t('phrase.back')}
         </motion.button>
 
         {/* Audio bar keyframes (injected via style tag) */}

@@ -5,11 +5,15 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const getGreeting = (): string => {
+/**
+ * Devuelve la CLAVE de traducción del saludo según la hora local.
+ * El componente la pasa por `t()` — esta función es i18n-agnóstica.
+ */
+export const getGreetingKey = (): 'home.greetingMorning' | 'home.greetingAfternoon' | 'home.greetingEvening' => {
   const hour = new Date().getHours()
-  if (hour >= 5 && hour < 12) return 'Buenos días'
-  if (hour >= 12 && hour < 19) return 'Buenas tardes'
-  return 'Buenas noches'
+  if (hour >= 5 && hour < 12) return 'home.greetingMorning'
+  if (hour >= 12 && hour < 19) return 'home.greetingAfternoon'
+  return 'home.greetingEvening'
 }
 
 export const decodeJwtPayload = (token: string): { exp?: number } | null => {

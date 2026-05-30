@@ -1,0 +1,61 @@
+{
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "retry": "Reintentar",
+    "loading": "Cargando..."
+  },
+  "home": {
+    "greetingMorning": "Buenos días",
+    "greetingAfternoon": "Buenas tardes",
+    "greetingEvening": "Buenas noches",
+    "question": "¿Cómo te sientes en este momento?",
+    "moodAria": "Seleccionar estado: {{name}}",
+    "moodError": "No se pudieron cargar los estados.",
+    "moodEmpty": "Aún no hay estados de ánimo. Vuelve pronto.",
+    "theme": {
+      "system": "Tema: sistema",
+      "dark": "Tema: oscuro",
+      "light": "Tema: claro"
+    },
+    "lang": {
+      "toggle": "Cambiar idioma",
+      "es": "Español",
+      "en": "English"
+    }
+  },
+  "phrase": {
+    "back": "↩ cambiar",
+    "backAria": "Volver a selección de estado de ánimo",
+    "mute": "Silenciar",
+    "unmute": "Activar sonido",
+    "error": "Sin conexión",
+    "emptyText": "Ya viste todas las frases para este momento. Vuelve pronto, siempre hay nuevas.",
+    "emptyAction": "Ver de nuevo",
+    "hintNext": "← siguiente",
+    "hintSave": "guardar →"
+  },
+  "admin": {
+    "panelTitle": "Panel de administración",
+    "login": {
+      "username": "Usuario",
+      "password": "Contraseña",
+      "submit": "Ingresar",
+      "submitting": "Ingresando...",
+      "invalidCredentials": "Credenciales incorrectas",
+      "genericError": "Error al iniciar sesión. Intenta de nuevo.",
+      "showPassword": "Mostrar contraseña",
+      "hidePassword": "Ocultar contraseña"
+    },
+    "nav": {
+      "estados": "Estados",
+      "frases": "Frases",
+      "uploads": "Uploads"
+    },
+    "logout": "Cerrar sesión",
+    "menu": {
+      "open": "Abrir menú",
+      "close": "Cerrar menú"
+    }
+  }
+}

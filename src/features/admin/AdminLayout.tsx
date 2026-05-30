@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Outlet, NavLink, useNavigate } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/shared/ui/button'
 import { BrandLogo } from '@/shared/ui/BrandLogo'
 import { MenuIcon, XIcon, LogOutIcon } from 'lucide-react'
@@ -7,12 +8,13 @@ import { cn } from '@/lib/utils'
 import { TOKEN_KEY } from '@/lib/constants'
 
 const NAV_ITEMS = [
-  { to: '/admin/estados', label: 'Estados' },
-  { to: '/admin/frases', label: 'Frases' },
-  { to: '/admin/uploads', label: 'Uploads' },
+  { to: '/admin/estados', key: 'admin.nav.estados' },
+  { to: '/admin/frases', key: 'admin.nav.frases' },
+  { to: '/admin/uploads', key: 'admin.nav.uploads' },
 ] as const
 
 const AdminLayout = (): React.JSX.Element => {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
@@ -30,7 +32,7 @@ const AdminLayout = (): React.JSX.Element => {
           size="icon-sm"
           className="md:hidden"
           onClick={() => setSidebarOpen(false)}
-          aria-label="Cerrar menu"
+          aria-label={t('admin.menu.close')}
         >
           <XIcon />
         </Button>
@@ -50,7 +52,7 @@ const AdminLayout = (): React.JSX.Element => {
               )
             }
           >
-            {item.label}
+            {t(item.key)}
           </NavLink>
         ))}
       </nav>
@@ -61,7 +63,7 @@ const AdminLayout = (): React.JSX.Element => {
           onClick={handleLogout}
         >
           <LogOutIcon className="size-4" />
-          Cerrar sesion
+          {t('admin.logout')}
         </Button>
       </div>
     </div>
@@ -95,7 +97,7 @@ const AdminLayout = (): React.JSX.Element => {
             variant="ghost"
             size="icon"
             onClick={() => setSidebarOpen(true)}
-            aria-label="Abrir menu"
+            aria-label={t('admin.menu.open')}
           >
             <MenuIcon />
           </Button>

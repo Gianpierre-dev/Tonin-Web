@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { hexToRgb } from '@/lib/utils'
 
 interface EmptyCardProps {
@@ -7,6 +8,7 @@ interface EmptyCardProps {
 }
 
 export const EmptyCard = ({ colorPrimario, onReset }: EmptyCardProps): React.JSX.Element => {
+  const { t } = useTranslation()
   return (
     <div
       className="flex w-full max-w-sm flex-col items-center justify-center rounded-3xl px-8 py-12 text-center select-none"
@@ -20,7 +22,7 @@ export const EmptyCard = ({ colorPrimario, onReset }: EmptyCardProps): React.JSX
         className="mb-8 text-lg leading-relaxed text-text-dark"
         style={{ fontFamily: 'var(--mood-font)' }}
       >
-        Ya viste todas las frases para este momento. Vuelve pronto, siempre hay nuevas.
+        {t('phrase.emptyText')}
       </p>
       <button
         type="button"
@@ -32,7 +34,7 @@ export const EmptyCard = ({ colorPrimario, onReset }: EmptyCardProps): React.JSX
           border: `1px solid rgba(${hexToRgb(colorPrimario)}, 0.2)`,
         }}
       >
-        Ver de nuevo
+        {t('phrase.emptyAction')}
       </button>
     </div>
   )

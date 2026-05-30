@@ -1,14 +1,17 @@
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { useAppStore } from '@/shared/store/useAppStore'
-import { getGreeting } from '@/lib/utils'
+import { getGreetingKey } from '@/lib/utils'
 import type { EstadoAnimoDTO } from '@/lib/schemas'
 import { MoodGrid } from './MoodGrid'
 import { BrandLogo } from '@/shared/ui/BrandLogo'
+import { LangToggle } from '@/shared/ui/LangToggle'
 
 const THEME_CYCLE: Array<'system' | 'dark' | 'light'> = ['system', 'dark', 'light']
 
 const ThemeToggle = (): React.JSX.Element => {
+  const { t } = useTranslation()
   const themeMode = useAppStore((s) => s.themeMode)
   const setThemeMode = useAppStore((s) => s.setThemeMode)
 
@@ -19,12 +22,7 @@ const ThemeToggle = (): React.JSX.Element => {
   }
 
   const icon = themeMode === 'dark' ? '☽' : themeMode === 'light' ? '☀' : '⚙'
-  const label =
-    themeMode === 'system'
-      ? 'Tema: sistema'
-      : themeMode === 'dark'
-        ? 'Tema: oscuro'
-        : 'Tema: claro'
+  const label = t(`home.theme.${themeMode}`)
 
   return (
     <button
@@ -40,6 +38,7 @@ const ThemeToggle = (): React.JSX.Element => {
 }
 
 export const HomeScreen = (): React.JSX.Element => {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const setActiveMood = useAppStore((s) => s.setActiveMood)
 
@@ -64,7 +63,8 @@ export const HomeScreen = (): React.JSX.Element => {
       />
 
       {/* Top bar */}
-      <div className="absolute right-4 top-4 z-10">
+      <div className="absolute right-4 top-4 z-10 flex items-center gap-1">
+        <LangToggle />
         <ThemeToggle />
       </div>
 
@@ -75,7 +75,7 @@ export const HomeScreen = (): React.JSX.Element => {
 
         {/* Greeting */}
         <p className="text-sm font-light tracking-wide text-text-light/50 dark:text-text-dark/50">
-          {getGreeting()}
+          {t(getGreetingKey())}
         </p>
 
         {/* Question */}
@@ -83,7 +83,7 @@ export const HomeScreen = (): React.JSX.Element => {
           className="max-w-xs text-center text-2xl font-light leading-relaxed text-text-light dark:text-text-dark sm:text-3xl"
           style={{ fontFamily: "'Cormorant Garamond', 'Outfit', serif" }}
         >
-          ¿Cómo te sientes en este momento?
+          {t('home.question')}
         </h1>
 
         {/* Mood grid */}

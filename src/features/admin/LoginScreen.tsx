@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/shared/ui/button'
 import { BrandLogo } from '@/shared/ui/BrandLogo'
 import { Input } from '@/shared/ui/input'
@@ -10,6 +11,7 @@ import { EyeIcon, EyeOffIcon } from 'lucide-react'
 import axios from 'axios'
 
 const LoginScreen = (): React.JSX.Element => {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -28,9 +30,9 @@ const LoginScreen = (): React.JSX.Element => {
       navigate('/admin/estados')
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.status === 401) {
-        setError('Credenciales incorrectas')
+        setError(t('admin.login.invalidCredentials'))
       } else {
-        setError('Error al iniciar sesion. Intenta de nuevo.')
+        setError(t('admin.login.genericError'))
       }
     } finally {
       setLoading(false)
@@ -42,11 +44,11 @@ const LoginScreen = (): React.JSX.Element => {
       <div className="w-full max-w-sm rounded-xl border bg-popover p-6 shadow-md">
         <BrandLogo className="mx-auto mb-2 h-12" />
         <h1 className="mb-6 text-center text-sm font-medium text-muted-foreground">
-          Panel de administración
+          {t('admin.panelTitle')}
         </h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="username">Usuario</Label>
+            <Label htmlFor="username">{t('admin.login.username')}</Label>
             <Input
               id="username"
               type="text"
@@ -58,7 +60,7 @@ const LoginScreen = (): React.JSX.Element => {
             />
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="password">Contraseña</Label>
+            <Label htmlFor="password">{t('admin.login.password')}</Label>
             <div className="relative">
               <Input
                 id="password"
@@ -73,7 +75,7 @@ const LoginScreen = (): React.JSX.Element => {
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                aria-label={showPassword ? t('admin.login.hidePassword') : t('admin.login.showPassword')}
                 aria-pressed={showPassword}
                 className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none"
               >
@@ -89,7 +91,7 @@ const LoginScreen = (): React.JSX.Element => {
             <p className="text-sm text-destructive">{error}</p>
           )}
           <Button type="submit" disabled={loading} className="w-full">
-            {loading ? 'Ingresando...' : 'Ingresar'}
+            {loading ? t('admin.login.submitting') : t('admin.login.submit')}
           </Button>
         </form>
       </div>

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { hexToRgb, isTokenExpired, decodeJwtPayload, getGreeting } from '@/lib/utils'
+import { hexToRgb, isTokenExpired, decodeJwtPayload, getGreetingKey } from '@/lib/utils'
 
 describe('hexToRgb', () => {
   it('converts hex to rgb string', () => {
@@ -53,9 +53,13 @@ describe('isTokenExpired', () => {
   })
 })
 
-describe('getGreeting', () => {
-  it('returns a string greeting', () => {
-    const greeting = getGreeting()
-    expect(['Buenos días', 'Buenas tardes', 'Buenas noches']).toContain(greeting)
+describe('getGreetingKey', () => {
+  it('returns a valid i18n key', () => {
+    const key = getGreetingKey()
+    expect([
+      'home.greetingMorning',
+      'home.greetingAfternoon',
+      'home.greetingEvening',
+    ]).toContain(key)
   })
 })

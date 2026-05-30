@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { useEstados } from '@/shared/hooks/useEstados'
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion'
 import type { EstadoAnimoDTO } from '@/lib/schemas'
@@ -12,6 +13,7 @@ interface MoodGridProps {
 const SKELETON_COUNT = 6
 
 export const MoodGrid = ({ onSelect }: MoodGridProps): React.JSX.Element => {
+  const { t } = useTranslation()
   const prefersReducedMotion = useReducedMotion()
 
   const container = useMemo(
@@ -50,13 +52,13 @@ export const MoodGrid = ({ onSelect }: MoodGridProps): React.JSX.Element => {
   if (error) {
     return (
       <div className="flex flex-col items-center gap-4 text-center">
-        <p className="text-sm text-text-light/70 dark:text-text-dark/70">{error}</p>
+        <p className="text-sm text-text-light/70 dark:text-text-dark/70">{t('home.moodError')}</p>
         <button
           type="button"
           onClick={() => void retry()}
           className="rounded-lg border border-accent/30 px-4 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent/10"
         >
-          Reintentar
+          {t('common.retry')}
         </button>
       </div>
     )
@@ -65,7 +67,7 @@ export const MoodGrid = ({ onSelect }: MoodGridProps): React.JSX.Element => {
   if (estados.length === 0) {
     return (
       <p className="text-center text-sm text-text-light/60 dark:text-text-dark/60">
-        Aún no hay estados de ánimo. Vuelve pronto.
+        {t('home.moodEmpty')}
       </p>
     )
   }

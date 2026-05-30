@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { EstadoAnimoDTO } from '@/lib/schemas'
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion'
 
@@ -9,6 +10,7 @@ interface MoodCellProps {
 }
 
 export const MoodCell = ({ estado, onSelect }: MoodCellProps): React.JSX.Element => {
+  const { t } = useTranslation()
   const prefersReducedMotion = useReducedMotion()
   const [imgError, setImgError] = useState(false)
 
@@ -19,7 +21,7 @@ export const MoodCell = ({ estado, onSelect }: MoodCellProps): React.JSX.Element
       whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
       onClick={() => onSelect(estado)}
       className="flex min-h-[80px] min-w-[80px] flex-col items-center justify-center gap-2 rounded-2xl border border-black/5 bg-white/5 p-4 transition-colors hover:bg-white/10 dark:border-white/5 dark:bg-white/5 dark:hover:bg-white/10"
-      aria-label={`Seleccionar estado: ${estado.nombre}`}
+      aria-label={t('home.moodAria', { name: estado.nombre })}
     >
       {estado.iconUrl && !imgError ? (
         <img

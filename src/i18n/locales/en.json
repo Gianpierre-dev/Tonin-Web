@@ -1,0 +1,61 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "retry": "Retry",
+    "loading": "Loading..."
+  },
+  "home": {
+    "greetingMorning": "Good morning",
+    "greetingAfternoon": "Good afternoon",
+    "greetingEvening": "Good evening",
+    "question": "How are you feeling right now?",
+    "moodAria": "Select mood: {{name}}",
+    "moodError": "Couldn't load moods.",
+    "moodEmpty": "No moods yet. Come back soon.",
+    "theme": {
+      "system": "Theme: system",
+      "dark": "Theme: dark",
+      "light": "Theme: light"
+    },
+    "lang": {
+      "toggle": "Change language",
+      "es": "Español",
+      "en": "English"
+    }
+  },
+  "phrase": {
+    "back": "↩ change",
+    "backAria": "Back to mood selection",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "error": "No connection",
+    "emptyText": "You've seen all the phrases for now. Come back soon, there's always more.",
+    "emptyAction": "See again",
+    "hintNext": "← next",
+    "hintSave": "save →"
+  },
+  "admin": {
+    "panelTitle": "Admin panel",
+    "login": {
+      "username": "Username",
+      "password": "Password",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "invalidCredentials": "Invalid credentials",
+      "genericError": "Sign-in failed. Try again.",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password"
+    },
+    "nav": {
+      "estados": "Moods",
+      "frases": "Phrases",
+      "uploads": "Uploads"
+    },
+    "logout": "Sign out",
+    "menu": {
+      "open": "Open menu",
+      "close": "Close menu"
+    }
+  }
+}
