@@ -21,8 +21,19 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (axios.isAxiosError(error) && error.response?.status === 401) {
-      localStorage.removeItem(TOKEN_KEY)
-      window.location.href = '/admin/login'
+      // NO redirigir si:
+      //  - el request era el propio login (las credenciales malas dan 401:
+      //    el redirect recargaba la página y tapaba el mensaje "Credenciales
+      //    incorrectas" del LoginScreen).
+      //  - no había token previo (usuario anónimo cuyo 401 viene de un
+      //    endpoint público: no es una sesión que expira, no debe ir a login).
+      const url = error.config?.url ?? ''
+      const isLoginRequest = url.includes('/auth/login')
+      const hadToken = localStorage.getItem(TOKEN_KEY) !== null
+      if (!isLoginRequest && hadToken) {
+        localStorage.removeItem(TOKEN_KEY)
+        window.location.href = '/admin/login'
+      }
     }
     return Promise.reject(error)
   },

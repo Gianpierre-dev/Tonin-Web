@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { hexToRgb } from '@/lib/utils'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAppStore } from '@/shared/store/useAppStore'
+import { useEstados } from '@/shared/hooks/useEstados'
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion'
 import { useAudioContext } from '@/shared/audio/AudioProvider'
 import { ANIMATION_PRESETS, DEFAULT_ANIMATION } from '@/lib/constants'
@@ -16,7 +17,10 @@ export const PhraseScreen = (): React.JSX.Element => {
   const { t } = useTranslation()
   const { moodName } = useParams<{ moodName: string }>()
   const navigate = useNavigate()
-  const estados = useAppStore((s) => s.estados)
+  // `useEstados()` dispara la carga si todavía no se cargaron. Sin esto, un
+  // deep-link a /phrase/:codigo (refresh o link compartido) dejaba el array
+  // en [] y la pantalla quedaba en negro eterno.
+  const { estados, loading: estadosLoading } = useEstados()
   const setActiveMood = useAppStore((s) => s.setActiveMood)
   const clearActiveMood = useAppStore((s) => s.clearActiveMood)
   const isMuted = useAppStore((s) => s.isMuted)
@@ -61,12 +65,14 @@ export const PhraseScreen = (): React.JSX.Element => {
     }
   }, [estado?.musicaUrl, play, stop])
 
-  // Redirect if estado not found (after estados are loaded)
+  // Si terminamos de cargar y el código no matchea (o la lista está vacía),
+  // volvemos a home. Antes esto pedía `estados.length > 0` y se quedaba
+  // colgado cuando la carga venía vacía o aún no había arrancado.
   useEffect(() => {
-    if (estados.length > 0 && !estado) {
+    if (!estadosLoading && !estado) {
       void navigate('/', { replace: true })
     }
-  }, [estados, estado, navigate])
+  }, [estadosLoading, estado, navigate])
 
   const handleBack = useCallback(() => {
     stop()
