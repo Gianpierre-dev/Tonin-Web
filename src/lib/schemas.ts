@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 export const estadoAnimoDTOSchema = z.object({
   id: z.number(),
+  codigo: z.string(),
   nombre: z.string(),
   emoji: z.string(),
   iconUrl: z.string().nullable(),

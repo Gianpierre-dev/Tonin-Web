@@ -36,6 +36,7 @@ interface EstadoFormProps {
 }
 
 const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.Element => {
+  const [codigo, setCodigo] = useState(estado?.codigo ?? '')
   const [nombre, setNombre] = useState(estado?.nombre ?? '')
   const [emoji, setEmoji] = useState(estado?.emoji ?? '')
   const [iconUrl, setIconUrl] = useState(estado?.iconUrl ?? '')
@@ -92,6 +93,7 @@ const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.E
 
     try {
       await onSubmit({
+        codigo,
         nombre,
         emoji,
         iconUrl: iconUrl || null,
@@ -122,12 +124,25 @@ const EstadoForm = ({ estado, onSubmit, onClose }: EstadoFormProps): React.JSX.E
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col gap-2">
+            <Label htmlFor="estado-codigo">Código (slug)</Label>
+            <Input
+              id="estado-codigo"
+              value={codigo}
+              onChange={(e) => setCodigo(e.target.value)}
+              placeholder="feliz, muy-feliz"
+              pattern="^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              title="Sólo minúsculas, números y guiones (kebab-case)"
+              required
+              disabled={estado !== undefined}
+            />
+          </div>
+          <div className="flex flex-col gap-2">
             <Label htmlFor="estado-nombre">Nombre</Label>
             <Input
               id="estado-nombre"
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
-              placeholder="FELIZ"
+              placeholder="Feliz"
               required
             />
           </div>

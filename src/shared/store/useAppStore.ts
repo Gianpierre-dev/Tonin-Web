@@ -28,6 +28,9 @@ interface AppState {
 
   themeMode: 'system' | 'dark' | 'light'
   setThemeMode: (mode: 'system' | 'dark' | 'light') => void
+
+  lang: 'es' | 'en'
+  setLang: (lang: 'es' | 'en') => void
 }
 
 export const useAppStore = create<AppState>()(
@@ -70,6 +73,9 @@ export const useAppStore = create<AppState>()(
 
       themeMode: 'system',
       setThemeMode: (mode) => set({ themeMode: mode }),
+
+      lang: 'es',
+      setLang: (lang) => set({ lang }),
     }),
     {
       name: 'tonin-storage',
@@ -78,6 +84,7 @@ export const useAppStore = create<AppState>()(
         isMuted: state.isMuted,
         volume: state.volume,
         themeMode: state.themeMode,
+        lang: state.lang,
       }),
     },
   ),

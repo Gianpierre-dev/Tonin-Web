@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { API_BASE_URL, TOKEN_KEY } from '@/lib/constants'
+import { useAppStore } from '@/shared/store/useAppStore'
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -11,6 +12,8 @@ apiClient.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
+  // Idioma activo → el back devuelve contenido y mensajes de error traducidos.
+  config.headers['Accept-Language'] = useAppStore.getState().lang
   return config
 })
 

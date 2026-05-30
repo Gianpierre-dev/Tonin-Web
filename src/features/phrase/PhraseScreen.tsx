@@ -23,7 +23,7 @@ export const PhraseScreen = (): React.JSX.Element => {
   const [hintsVisible, setHintsVisible] = useState(true)
 
   const estado = useMemo(
-    () => estados.find((e) => e.nombre.toLowerCase() === moodName?.toLowerCase()),
+    () => estados.find((e) => e.codigo === moodName),
     [estados, moodName],
   )
 

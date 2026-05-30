@@ -4,7 +4,8 @@ import type { EstadoAnimoDTO } from '@/lib/schemas'
 
 const mockEstado: EstadoAnimoDTO = {
   id: 1,
-  nombre: 'FELIZ',
+  codigo: 'feliz',
+  nombre: 'Feliz',
   emoji: '😊',
   iconUrl: null,
   musicaUrl: null,

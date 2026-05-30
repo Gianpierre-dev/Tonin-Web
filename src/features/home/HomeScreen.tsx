@@ -46,7 +46,7 @@ export const HomeScreen = (): React.JSX.Element => {
   const handleSelect = useCallback(
     (estado: EstadoAnimoDTO) => {
       setActiveMood(estado)
-      void navigate(`/phrase/${estado.nombre.toLowerCase()}`)
+      void navigate(`/phrase/${estado.codigo}`)
     },
     [setActiveMood, navigate],
   )
