@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/shared/ui/button'
 import {
   Table,
@@ -15,6 +16,7 @@ import {
   updateFrase,
   deleteFrase,
 } from '@/shared/api/endpoints'
+import { getErrorMessage } from '@/lib/getErrorMessage'
 import type { FraseDTO } from '@/lib/schemas'
 import FraseForm from './FraseForm'
 import { PlusIcon, PencilIcon, TrashIcon } from 'lucide-react'
@@ -25,6 +27,7 @@ const truncate = (text: string, length: number): string =>
   text.length > length ? `${text.slice(0, length)}...` : text
 
 const FrasesPage = (): React.JSX.Element => {
+  const { t } = useTranslation()
   const [frases, setFrases] = useState<FraseDTO[]>([])
   const [loading, setLoading] = useState(true)
   const [crudError, setCrudError] = useState('')
@@ -35,12 +38,12 @@ const FrasesPage = (): React.JSX.Element => {
     try {
       const data = await getFrases()
       setFrases(data)
-    } catch {
-      setCrudError('No se pudieron cargar las frases. Verifica la conexión.')
+    } catch (err) {
+      setCrudError(getErrorMessage(err, t('admin.frasesPage.loadError')))
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [t])
 
   useEffect(() => {
     void fetchFrases()
@@ -57,13 +60,13 @@ const FrasesPage = (): React.JSX.Element => {
   }
 
   const handleDelete = async (frase: FraseDTO) => {
-    if (!window.confirm(`Eliminar frase "${truncate(frase.texto, 40)}"?`)) return
+    if (!window.confirm(t('admin.frasesPage.deleteConfirm', { text: truncate(frase.texto, 40) }))) return
     try {
       setCrudError('')
       await deleteFrase(frase.id)
       await fetchFrases()
-    } catch {
-      setCrudError('No se pudo eliminar la frase.')
+    } catch (err) {
+      setCrudError(getErrorMessage(err, t('common.errorGeneric')))
     }
   }
 
@@ -83,17 +86,17 @@ const FrasesPage = (): React.JSX.Element => {
   }
 
   if (loading) {
-    return <div className="text-sm text-muted-foreground">Cargando frases...</div>
+    return <div className="text-sm text-muted-foreground">{t('admin.frasesPage.loading')}</div>
   }
 
   return (
     <div className="flex flex-col gap-4">
       {crudError && <p className="text-sm text-destructive">{crudError}</p>}
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold">Frases</h1>
+        <h1 className="text-lg font-semibold">{t('admin.frasesPage.title')}</h1>
         <Button onClick={handleAdd} size="sm">
           <PlusIcon className="size-4" />
-          Agregar
+          {t('common.add')}
         </Button>
       </div>
 
@@ -101,16 +104,16 @@ const FrasesPage = (): React.JSX.Element => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Texto</TableHead>
-            <TableHead>Estado de Animo</TableHead>
-            <TableHead className="text-right">Acciones</TableHead>
+            <TableHead>{t('admin.frasesPage.th.texto')}</TableHead>
+            <TableHead>{t('admin.frasesPage.th.estado')}</TableHead>
+            <TableHead className="text-right">{t('common.actions')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {frases.length === 0 ? (
             <TableRow>
               <TableCell colSpan={3} className="text-center text-muted-foreground">
-                No hay frases registradas
+                {t('admin.frasesPage.empty')}
               </TableCell>
             </TableRow>
           ) : (
@@ -130,7 +133,7 @@ const FrasesPage = (): React.JSX.Element => {
                       variant="ghost"
                       size="icon-sm"
                       onClick={() => handleEdit(frase)}
-                      aria-label="Editar frase"
+                      aria-label={t('admin.frasesPage.editAria')}
                     >
                       <PencilIcon />
                     </Button>
@@ -138,7 +141,7 @@ const FrasesPage = (): React.JSX.Element => {
                       variant="destructive"
                       size="icon-sm"
                       onClick={() => void handleDelete(frase)}
-                      aria-label="Eliminar frase"
+                      aria-label={t('admin.frasesPage.deleteAria')}
                     >
                       <TrashIcon />
                     </Button>

@@ -1,6 +1,8 @@
 import { useState, useRef, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/shared/ui/button'
 import { uploadImagen, uploadMusica, deleteUpload } from '@/shared/api/endpoints'
+import { getErrorMessage } from '@/lib/getErrorMessage'
 import { TrashIcon, UploadIcon, CopyIcon, CheckIcon } from 'lucide-react'
 
 const IMAGE_ACCEPT = '.jpeg,.jpg,.png,.gif,.webp'
@@ -13,6 +15,7 @@ interface UploadEntry {
 }
 
 const UploadsPage = (): React.JSX.Element => {
+  const { t } = useTranslation()
   const [uploads, setUploads] = useState<UploadEntry[]>([])
   const [imageLoading, setImageLoading] = useState(false)
   const [audioLoading, setAudioLoading] = useState(false)
@@ -31,12 +34,12 @@ const UploadsPage = (): React.JSX.Element => {
         { filename: file.name, url: result.url, tipo: 'imagen' },
         ...prev,
       ])
-    } catch {
-      setError('Error al subir imagen')
+    } catch (err) {
+      setError(getErrorMessage(err, t('admin.uploads.errorImage')))
     } finally {
       setImageLoading(false)
     }
-  }, [])
+  }, [t])
 
   const handleAudioUpload = useCallback(async (file: File) => {
     setError('')
@@ -47,12 +50,12 @@ const UploadsPage = (): React.JSX.Element => {
         { filename: file.name, url: result.url, tipo: 'musica' },
         ...prev,
       ])
-    } catch {
-      setError('Error al subir audio')
+    } catch (err) {
+      setError(getErrorMessage(err, t('admin.uploads.errorAudio')))
     } finally {
       setAudioLoading(false)
     }
-  }, [])
+  }, [t])
 
   const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -74,14 +77,14 @@ const UploadsPage = (): React.JSX.Element => {
     if (tipo === 'imagen') {
       const validImage = /\.(jpe?g|png|gif|webp)$/i.test(file.name)
       if (!validImage) {
-        setError('Formato de imagen no valido. Usa jpeg, png, gif o webp.')
+        setError(t('admin.uploads.invalidImageFormat'))
         return
       }
       void handleImageUpload(file)
     } else {
       const validAudio = /\.(mp3|wav|ogg)$/i.test(file.name)
       if (!validAudio) {
-        setError('Formato de audio no valido. Usa mp3, wav u ogg.')
+        setError(t('admin.uploads.invalidAudioFormat'))
         return
       }
       void handleAudioUpload(file)
@@ -96,8 +99,8 @@ const UploadsPage = (): React.JSX.Element => {
     try {
       await deleteUpload(entry.url)
       setUploads((prev) => prev.filter((u) => u.url !== entry.url))
-    } catch {
-      setError('Error al eliminar archivo')
+    } catch (err) {
+      setError(getErrorMessage(err, t('admin.uploads.errorDelete')))
     }
   }
 
@@ -112,13 +115,13 @@ const UploadsPage = (): React.JSX.Element => {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-lg font-semibold">Uploads</h1>
+      <h1 className="text-lg font-semibold">{t('admin.uploads.title')}</h1>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 
       {/* Images section */}
       <section className="flex flex-col gap-3">
-        <h2 className="text-base font-medium">Imagenes</h2>
+        <h2 className="text-base font-medium">{t('admin.uploads.images')}</h2>
         <div
           onDrop={handleDrop('imagen')}
           onDragOver={handleDragOver}
@@ -126,7 +129,7 @@ const UploadsPage = (): React.JSX.Element => {
         >
           <UploadIcon className="size-8 text-muted-foreground" />
           <p className="text-sm text-muted-foreground">
-            Arrastra una imagen aqui o
+            {t('admin.uploads.dragImage')}
           </p>
           <Button
             variant="default"
@@ -134,9 +137,9 @@ const UploadsPage = (): React.JSX.Element => {
             onClick={() => imageInputRef.current?.click()}
             disabled={imageLoading}
           >
-            {imageLoading ? 'Subiendo...' : 'Seleccionar archivo'}
+            {imageLoading ? t('admin.uploads.uploading') : t('admin.uploads.selectFile')}
           </Button>
-          <p className="text-xs text-muted-foreground">JPEG, PNG, GIF, WebP</p>
+          <p className="text-xs text-muted-foreground">{t('admin.uploads.formatsImage')}</p>
           <input
             ref={imageInputRef}
             type="file"
@@ -166,7 +169,7 @@ const UploadsPage = (): React.JSX.Element => {
                   variant="ghost"
                   size="icon-sm"
                   onClick={() => void copyToClipboard(entry.url)}
-                  aria-label="Copiar URL"
+                  aria-label={t('admin.uploads.copyUrl')}
                 >
                   {copiedUrl === entry.url ? <CheckIcon /> : <CopyIcon />}
                 </Button>
@@ -174,7 +177,7 @@ const UploadsPage = (): React.JSX.Element => {
                   variant="destructive"
                   size="icon-sm"
                   onClick={() => void handleDelete(entry)}
-                  aria-label="Eliminar"
+                  aria-label={t('admin.uploads.deleteAria')}
                 >
                   <TrashIcon />
                 </Button>
@@ -186,7 +189,7 @@ const UploadsPage = (): React.JSX.Element => {
 
       {/* Audio section */}
       <section className="flex flex-col gap-3">
-        <h2 className="text-base font-medium">Musica</h2>
+        <h2 className="text-base font-medium">{t('admin.uploads.music')}</h2>
         <div
           onDrop={handleDrop('musica')}
           onDragOver={handleDragOver}
@@ -194,7 +197,7 @@ const UploadsPage = (): React.JSX.Element => {
         >
           <UploadIcon className="size-8 text-muted-foreground" />
           <p className="text-sm text-muted-foreground">
-            Arrastra un archivo de audio aqui o
+            {t('admin.uploads.dragAudio')}
           </p>
           <Button
             variant="default"
@@ -202,9 +205,9 @@ const UploadsPage = (): React.JSX.Element => {
             onClick={() => audioInputRef.current?.click()}
             disabled={audioLoading}
           >
-            {audioLoading ? 'Subiendo...' : 'Seleccionar archivo'}
+            {audioLoading ? t('admin.uploads.uploading') : t('admin.uploads.selectFile')}
           </Button>
-          <p className="text-xs text-muted-foreground">MP3, WAV, OGG</p>
+          <p className="text-xs text-muted-foreground">{t('admin.uploads.formatsAudio')}</p>
           <input
             ref={audioInputRef}
             type="file"
@@ -232,7 +235,7 @@ const UploadsPage = (): React.JSX.Element => {
                   variant="ghost"
                   size="icon-sm"
                   onClick={() => void copyToClipboard(entry.url)}
-                  aria-label="Copiar URL"
+                  aria-label={t('admin.uploads.copyUrl')}
                 >
                   {copiedUrl === entry.url ? <CheckIcon /> : <CopyIcon />}
                 </Button>
@@ -240,7 +243,7 @@ const UploadsPage = (): React.JSX.Element => {
                   variant="destructive"
                   size="icon-sm"
                   onClick={() => void handleDelete(entry)}
-                  aria-label="Eliminar"
+                  aria-label={t('admin.uploads.deleteAria')}
                 >
                   <TrashIcon />
                 </Button>

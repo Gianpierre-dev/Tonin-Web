@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/shared/ui/button'
 import {
   Table,
@@ -15,11 +16,13 @@ import {
   updateEstado,
   deleteEstado,
 } from '@/shared/api/endpoints'
+import { getErrorMessage } from '@/lib/getErrorMessage'
 import type { EstadoAnimoDTO } from '@/lib/schemas'
 import EstadoForm from './EstadoForm'
 import { PlusIcon, PencilIcon, TrashIcon } from 'lucide-react'
 
 const EstadosPage = (): React.JSX.Element => {
+  const { t } = useTranslation()
   const [estados, setEstados] = useState<EstadoAnimoDTO[]>([])
   const [loading, setLoading] = useState(true)
   const [crudError, setCrudError] = useState('')
@@ -30,12 +33,12 @@ const EstadosPage = (): React.JSX.Element => {
     try {
       const data = await getEstados()
       setEstados(data)
-    } catch {
-      setCrudError('No se pudieron cargar los estados. Verifica la conexión.')
+    } catch (err) {
+      setCrudError(getErrorMessage(err, t('admin.estadosPage.loadError')))
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [t])
 
   useEffect(() => {
     void fetchEstados()
@@ -52,13 +55,13 @@ const EstadosPage = (): React.JSX.Element => {
   }
 
   const handleDelete = async (estado: EstadoAnimoDTO) => {
-    if (!window.confirm(`Eliminar estado "${estado.nombre}"?`)) return
+    if (!window.confirm(t('admin.estadosPage.deleteConfirm', { name: estado.nombre }))) return
     try {
       setCrudError('')
       await deleteEstado(estado.id)
       await fetchEstados()
-    } catch {
-      setCrudError(`No se pudo eliminar el estado "${estado.nombre}".`)
+    } catch (err) {
+      setCrudError(getErrorMessage(err, t('common.errorGeneric')))
     }
   }
 
@@ -78,17 +81,17 @@ const EstadosPage = (): React.JSX.Element => {
   }
 
   if (loading) {
-    return <div className="text-sm text-muted-foreground">Cargando estados...</div>
+    return <div className="text-sm text-muted-foreground">{t('admin.estadosPage.loading')}</div>
   }
 
   return (
     <div className="flex flex-col gap-4">
       {crudError && <p className="text-sm text-destructive">{crudError}</p>}
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold">Estados de Animo</h1>
+        <h1 className="text-lg font-semibold">{t('admin.estadosPage.title')}</h1>
         <Button onClick={handleAdd} size="sm">
           <PlusIcon className="size-4" />
-          Agregar
+          {t('common.add')}
         </Button>
       </div>
 
@@ -96,19 +99,19 @@ const EstadosPage = (): React.JSX.Element => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Nombre</TableHead>
-            <TableHead>Emoji</TableHead>
-            <TableHead>Colores</TableHead>
-            <TableHead>Fuente</TableHead>
-            <TableHead>Animacion</TableHead>
-            <TableHead className="text-right">Acciones</TableHead>
+            <TableHead>{t('admin.estadosPage.th.nombre')}</TableHead>
+            <TableHead>{t('admin.estadosPage.th.emoji')}</TableHead>
+            <TableHead>{t('admin.estadosPage.th.colores')}</TableHead>
+            <TableHead>{t('admin.estadosPage.th.fuente')}</TableHead>
+            <TableHead>{t('admin.estadosPage.th.animacion')}</TableHead>
+            <TableHead className="text-right">{t('common.actions')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {estados.length === 0 ? (
             <TableRow>
               <TableCell colSpan={6} className="text-center text-muted-foreground">
-                No hay estados registrados
+                {t('admin.estadosPage.empty')}
               </TableCell>
             </TableRow>
           ) : (
@@ -122,14 +125,14 @@ const EstadosPage = (): React.JSX.Element => {
                       <span
                         className="inline-block size-4 rounded-full border"
                         style={{ backgroundColor: estado.colorPrimario }}
-                        title={`Primario: ${estado.colorPrimario}`}
+                        title={estado.colorPrimario}
                       />
                     )}
                     {estado.colorSecundario && (
                       <span
                         className="inline-block size-4 rounded-full border"
                         style={{ backgroundColor: estado.colorSecundario }}
-                        title={`Secundario: ${estado.colorSecundario}`}
+                        title={estado.colorSecundario}
                       />
                     )}
                     {!estado.colorPrimario && !estado.colorSecundario && (
@@ -145,7 +148,7 @@ const EstadosPage = (): React.JSX.Element => {
                       variant="ghost"
                       size="icon-sm"
                       onClick={() => handleEdit(estado)}
-                      aria-label={`Editar ${estado.nombre}`}
+                      aria-label={t('admin.estadosPage.editAria', { name: estado.nombre })}
                     >
                       <PencilIcon />
                     </Button>
@@ -153,7 +156,7 @@ const EstadosPage = (): React.JSX.Element => {
                       variant="destructive"
                       size="icon-sm"
                       onClick={() => void handleDelete(estado)}
-                      aria-label={`Eliminar ${estado.nombre}`}
+                      aria-label={t('admin.estadosPage.deleteAria', { name: estado.nombre })}
                     >
                       <TrashIcon />
                     </Button>

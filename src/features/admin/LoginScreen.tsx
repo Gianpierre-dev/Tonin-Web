@@ -6,6 +6,7 @@ import { BrandLogo } from '@/shared/ui/BrandLogo'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { login } from '@/shared/api/endpoints'
+import { getErrorMessage } from '@/lib/getErrorMessage'
 import { TOKEN_KEY } from '@/lib/constants'
 import { EyeIcon, EyeOffIcon } from 'lucide-react'
 import axios from 'axios'
@@ -32,7 +33,7 @@ const LoginScreen = (): React.JSX.Element => {
       if (axios.isAxiosError(err) && err.response?.status === 401) {
         setError(t('admin.login.invalidCredentials'))
       } else {
-        setError(t('admin.login.genericError'))
+        setError(getErrorMessage(err, t('admin.login.genericError')))
       }
     } finally {
       setLoading(false)

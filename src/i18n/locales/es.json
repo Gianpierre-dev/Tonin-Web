@@ -3,7 +3,14 @@
     "save": "Guardar",
     "cancel": "Cancelar",
     "retry": "Reintentar",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "saving": "Guardando...",
+    "add": "Agregar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "actions": "Acciones",
+    "errorGeneric": "Ocurrió un error. Intenta de nuevo.",
+    "errorNetwork": "Sin conexión. Verifica tu red."
   },
   "home": {
     "greetingMorning": "Buenos días",
@@ -56,6 +63,53 @@
     "menu": {
       "open": "Abrir menú",
       "close": "Cerrar menú"
+    },
+    "estadosPage": {
+      "title": "Estados de ánimo",
+      "loading": "Cargando estados...",
+      "empty": "No hay estados registrados",
+      "loadError": "No se pudieron cargar los estados.",
+      "deleteConfirm": "¿Eliminar estado \"{{name}}\"?",
+      "editAria": "Editar {{name}}",
+      "deleteAria": "Eliminar {{name}}",
+      "th": {
+        "nombre": "Nombre",
+        "emoji": "Emoji",
+        "colores": "Colores",
+        "fuente": "Fuente",
+        "animacion": "Animación"
+      }
+    },
+    "frasesPage": {
+      "title": "Frases",
+      "loading": "Cargando frases...",
+      "empty": "No hay frases registradas",
+      "loadError": "No se pudieron cargar las frases.",
+      "deleteConfirm": "¿Eliminar frase \"{{text}}\"?",
+      "editAria": "Editar frase",
+      "deleteAria": "Eliminar frase",
+      "th": {
+        "texto": "Texto",
+        "estado": "Estado de ánimo"
+      }
+    },
+    "uploads": {
+      "title": "Uploads",
+      "images": "Imágenes",
+      "music": "Música",
+      "dragImage": "Arrastra una imagen aquí o",
+      "dragAudio": "Arrastra un archivo de audio aquí o",
+      "selectFile": "Seleccionar archivo",
+      "uploading": "Subiendo...",
+      "formatsImage": "JPEG, PNG, GIF, WebP",
+      "formatsAudio": "MP3, WAV, OGG",
+      "copyUrl": "Copiar URL",
+      "deleteAria": "Eliminar",
+      "errorImage": "No se pudo subir la imagen.",
+      "errorAudio": "No se pudo subir el audio.",
+      "errorDelete": "No se pudo eliminar el archivo.",
+      "invalidImageFormat": "Formato de imagen no válido. Usa jpeg, png, gif o webp.",
+      "invalidAudioFormat": "Formato de audio no válido. Usa mp3, wav u ogg."
     }
   }
 }

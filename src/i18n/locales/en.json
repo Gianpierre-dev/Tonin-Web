@@ -3,7 +3,14 @@
     "save": "Save",
     "cancel": "Cancel",
     "retry": "Retry",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "saving": "Saving...",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "actions": "Actions",
+    "errorGeneric": "Something went wrong. Try again.",
+    "errorNetwork": "No connection. Check your network."
   },
   "home": {
     "greetingMorning": "Good morning",
@@ -56,6 +63,53 @@
     "menu": {
       "open": "Open menu",
       "close": "Close menu"
+    },
+    "estadosPage": {
+      "title": "Moods",
+      "loading": "Loading moods...",
+      "empty": "No moods registered",
+      "loadError": "Couldn't load moods.",
+      "deleteConfirm": "Delete mood \"{{name}}\"?",
+      "editAria": "Edit {{name}}",
+      "deleteAria": "Delete {{name}}",
+      "th": {
+        "nombre": "Name",
+        "emoji": "Emoji",
+        "colores": "Colors",
+        "fuente": "Font",
+        "animacion": "Animation"
+      }
+    },
+    "frasesPage": {
+      "title": "Phrases",
+      "loading": "Loading phrases...",
+      "empty": "No phrases registered",
+      "loadError": "Couldn't load phrases.",
+      "deleteConfirm": "Delete phrase \"{{text}}\"?",
+      "editAria": "Edit phrase",
+      "deleteAria": "Delete phrase",
+      "th": {
+        "texto": "Text",
+        "estado": "Mood"
+      }
+    },
+    "uploads": {
+      "title": "Uploads",
+      "images": "Images",
+      "music": "Music",
+      "dragImage": "Drag an image here or",
+      "dragAudio": "Drag an audio file here or",
+      "selectFile": "Select file",
+      "uploading": "Uploading...",
+      "formatsImage": "JPEG, PNG, GIF, WebP",
+      "formatsAudio": "MP3, WAV, OGG",
+      "copyUrl": "Copy URL",
+      "deleteAria": "Delete",
+      "errorImage": "Couldn't upload image.",
+      "errorAudio": "Couldn't upload audio.",
+      "errorDelete": "Couldn't delete file.",
+      "invalidImageFormat": "Invalid image format. Use jpeg, png, gif or webp.",
+      "invalidAudioFormat": "Invalid audio format. Use mp3, wav or ogg."
     }
   }
 }
